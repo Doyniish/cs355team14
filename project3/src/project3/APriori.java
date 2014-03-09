@@ -4,15 +4,15 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-
 public class APriori {
 	public static void main(String[] args) throws IOException {
-		TransactionSet set = algorithm(0,0, "/testTransaction.txt");
+		TransactionSet set = algorithm(0, 0, "workingTransaction");
 	}
 	
 	public static TransactionSet algorithm(double minSupportLevel, double minConfidenceLevel, String filepath) throws IOException {
 		TransactionSet transactionSet = new TransactionSet();
 		readFile(filepath, transactionSet);
+		
 		return transactionSet;
 	}
 	
@@ -21,8 +21,8 @@ public class APriori {
 		String currentLine;
 		
 		while((currentLine = in.readLine()) != null) {
-			Transaction transaction = new Transaction(currentLine);
-			transactionSet.add(transaction);
+			System.out.println("currentLine: " + currentLine);
+			transactionSet.add(new Transaction(currentLine));
 		}
 
 		in.close();
