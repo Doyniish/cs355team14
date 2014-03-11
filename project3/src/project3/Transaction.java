@@ -3,12 +3,20 @@ package project3;
 import java.util.ArrayList;
 
 public class Transaction {
-	private ArrayList<String> items;
+	public ArrayList<String> items;
 	private double minSupportLevel;
+	
+	public Transaction() {
+		items = new ArrayList<String>();
+	}
 	
 	public Transaction(String transactionLine) {
 		items = new ArrayList<String>();
 		this.addItems(transactionLine);
+	}
+	
+	public void addItem(String item) {
+		items.add(item);
 	}
 	
 	public void addItems(String transactionLine) {
@@ -27,7 +35,7 @@ public class Transaction {
 			int i = 0;
 			
 			while(i < itemsFromString.length && i < 1001) {
-				System.out.println(i + ": " + itemsFromString[i]);
+//				System.out.println(i + ": " + itemsFromString[i]);
 				
 				if(itemsFromString[i].equals("")) {
 					errorLog = errorLog + "\nThere are two commas in the transaction file.";
@@ -52,6 +60,33 @@ public class Transaction {
 		if(!noErrors) {
 			System.out.println(errorLog);
 		}
-		System.out.println("The list contains a total of " + items.size() + " items.");
+//		System.out.println("The list contains a total of " + items.size() + " items.");
+	}
+	
+	public String getItem(int index) {
+		return items.get(index);
+	}
+	
+	public int getSize() {
+		return items.size();
+	}
+	
+	public boolean equals(Transaction ts) {
+		if(items.size() == ts.items.size() &&
+				items.containsAll(ts.items) &&
+				ts.items.containsAll(items)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public String toString() {
+		String toPrint = "{";
+		for(int i = 0; i < items.size(); i++) {
+			toPrint = toPrint + items.get(i) + ", ";
+		}
+		toPrint = toPrint.substring(0, toPrint.length() - 2) + "}";
+		return toPrint;
 	}
 }

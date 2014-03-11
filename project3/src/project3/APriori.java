@@ -9,22 +9,53 @@ public class APriori {
 		TransactionSet set = algorithm(0, 0, "workingTransaction");
 	}
 	
-	public static TransactionSet algorithm(double minSupportLevel, double minConfidenceLevel, String filepath) throws IOException {
-		TransactionSet transactionSet = new TransactionSet();
-		readFile(filepath, transactionSet);
+	public static TransactionSet algorithm(double minSupportLevel, double minConfidenceLevel, String filePath) throws IOException {
+		TransactionSet transactionsFromFile = readFile(filePath);
+		TransactionSet singleItemSets = generateCandidateSingleItemSets(transactionsFromFile);
 		
-		return transactionSet;
+		return null;
+		
+		// incomplete
 	}
 	
-	private static void readFile(String filepath, TransactionSet transactionSet) throws IOException {
+	private static TransactionSet readFile(String filepath) throws IOException {
+		TransactionSet transactionSet = new TransactionSet();
 		BufferedReader in = new BufferedReader(new FileReader(filepath));
 		String currentLine;
 		
 		while((currentLine = in.readLine()) != null) {
-			System.out.println("currentLine: " + currentLine);
 			transactionSet.add(new Transaction(currentLine));
 		}
 
 		in.close();
+		
+		return transactionSet;
+	}
+	
+	private static TransactionSet generateCandidateSingleItemSets(TransactionSet transactionsFromFile) {
+		TransactionSet singleItemTransactions = new TransactionSet();
+		
+		for(int i = 0; i < transactionsFromFile.getSize(); i++) {
+		
+			for(int j = 0; j < transactionsFromFile.getTransaction(i).getSize(); j++) {
+			
+				Transaction singleItem = new Transaction();
+				String currentItem = transactionsFromFile.getTransaction(i).getItem(j);
+				singleItem.addItem(currentItem);
+
+				int k = 0;
+				boolean itemFound = false;
+				while(k < transactionsFromFile.getSize() && !itemFound) {
+					itemFound = transactionsFromFile.getTransaction(k).equals(singleItem);
+					if(itemFound) {
+						singleItemTransactions.add(singleItem);
+					} else {
+						k++;
+					}
+				}
+			}
+		}
+		System.out.println(singleItemTransactions.getSize());
+		return singleItemTransactions;
 	}
 }
