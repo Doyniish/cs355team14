@@ -19,6 +19,14 @@ public class Transaction {
 		items.add(item);
 	}
 	
+	public boolean contains(Object o) {
+		return items.contains(o);
+	}
+	
+	public int indexOf(Object o) {
+		return items.indexOf(o);
+	}
+	
 	public void addItems(String transactionLine) {
 		String modifiedLine = transactionLine.toLowerCase().replaceAll(" ", "");
 		boolean noErrors = true;
