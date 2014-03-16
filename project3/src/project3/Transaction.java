@@ -89,6 +89,11 @@ public class Transaction {
 		}
 	}
 	
+	public boolean contains(Transaction ts) {
+		return this.items.containsAll(ts.items);
+		
+	}
+	
 	public String toString() {
 		String toPrint = "{";
 		for(int i = 0; i < items.size(); i++) {

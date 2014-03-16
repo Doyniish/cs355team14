@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Array;
+import java.util.ArrayList;
 import java.util.Collections;
 
 public class APriori {
@@ -14,15 +15,60 @@ public class APriori {
 	public static TransactionSet algorithm(double minSupportLevel, double minConfidenceLevel, String filePath) throws IOException {
 		TransactionSet transactionsFromFile = readFile(filePath);
 		Transaction uniqueItems = generateUniqueItems(transactionsFromFile);
+		
 		TransactionSet singleItemCandidateSets = generateSingleItemCandidateSets(uniqueItems);
-		
 		int[] countSingleItems = countSingleItems(uniqueItems, transactionsFromFile);
-		
 		TransactionSet filteredSingleItems = filterItems(singleItemCandidateSets, countSingleItems, minSupportLevel);
 		
+		TransactionSet twoItemCandidateSets = generateTwoItemSets(filteredSingleItems);
+		int[] countMultipleItems = countMultipleItems(twoItemCandidateSets, transactionsFromFile);
+		TransactionSet filteredDoubleItems = filterItems(twoItemCandidateSets, countMultipleItems, minSupportLevel);
+		
+//		System.out.println(filteredDoubleItems);
+		
+//		for(int i = 0; i < countMultipleItems.length; i++) {
+//			System.out.println(allPossibleTwoItemSets.getTransaction(i));
+//			System.out.println(countMultipleItems[i]);
+//		}
+		
+//		TransactionSet filteredTwoItemSets = filterMultipleItems(transactionsFromFile, );
+		
+		ArrayList<String> letters = new ArrayList<String>();
+		letters.add("a");
+		letters.add("b");
+		letters.add("c");
+		letters.add("d");
+		generate("", letters, 3, 3);
 		
 		return null;
-		
+	}
+	
+	private static String generate(String string, ArrayList<String> letters, int depth, int count) {
+		if(depth == 0) {
+			return "";
+		} else {
+			for(int i = 0; i < letters.size(); i++) {
+				if(!string.contains(letters.get(i))) {
+					string = string + letters.get(i);
+				}
+				generate(string, letters, depth - 1, count - 1);
+			}
+		}
+		System.out.println(string);
+		return string;
+	}
+
+	private static TransactionSet generateTwoItemSets(TransactionSet filteredSingleItems) {
+		TransactionSet twoItemSets = new TransactionSet();
+		for(int i = 0; i < filteredSingleItems.getSize(); i++) {
+			for(int j = i + 1; j < filteredSingleItems.getSize() - 1; j++) {
+				Transaction set = new Transaction();
+				set.addItem(filteredSingleItems.getTransaction(i).getItem(0));
+				set.addItem(filteredSingleItems.getTransaction(j).getItem(0));
+				twoItemSets.add(set);
+			}
+		}		
+		return twoItemSets;
 	}
 
 	private static TransactionSet filterItems(TransactionSet singleItemCandidateSets, int[] counts, double minSupportLevel) {
@@ -32,9 +78,7 @@ public class APriori {
 				filteredItems.add(singleItemCandidateSets.getTransaction(i));
 			}
 		}
-		
-		System.out.println(filteredItems);
-		
+				
 		return filteredItems;
 	}
 
@@ -91,5 +135,22 @@ public class APriori {
 		}
 			
 		return countSingleItems;
+	}
+	
+	private static int[] countMultipleItems(TransactionSet uniqueSets, TransactionSet transactionsFromFile) {
+		int[] countMultipleItems = new int[uniqueSets.getSize()];
+		for(int i = 0; i < countMultipleItems.length; i++) {
+			countMultipleItems[i] = 0;
+		}
+		
+		for(int i = 0; i < transactionsFromFile.getSize(); i++) {
+			for(int j = 0; j < uniqueSets.getSize(); j++) {
+				if(transactionsFromFile.getTransaction(i).contains(uniqueSets.getTransaction(j))) {
+					++countMultipleItems[j];
+				}
+			}
+		}
+
+		return countMultipleItems;
 	}
 }
