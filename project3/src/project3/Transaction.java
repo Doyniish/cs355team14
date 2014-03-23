@@ -15,8 +15,22 @@ public class Transaction {
 		this.addItems(transactionLine);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public Transaction(Transaction ts) {
+		this.minSupportLevel = ts.minSupportLevel;
+		this.items = (ArrayList<String>) ts.items.clone();
+	}
+	
 	public void addItem(String item) {
 		items.add(item);
+	}
+	
+	public void addAll(Transaction c) {
+		items.addAll(c.getItems());
+	}
+	
+	public void remove(String s) {
+		items.remove(s);
 	}
 	
 	public boolean contains(Object o) {
@@ -73,6 +87,10 @@ public class Transaction {
 	
 	public String getItem(int index) {
 		return items.get(index);
+	}
+	
+	public ArrayList<String> getItems() {
+		return this.items; 
 	}
 	
 	public int getSize() {

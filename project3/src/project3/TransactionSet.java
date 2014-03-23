@@ -22,6 +22,7 @@ public class TransactionSet {
 		this.minSupportLevel = (double) minSupportLevel / 10;
 	}
 	
+	
 	public TransactionSet(Transaction transaction, double minSupportLevel) {
 		transactionSet = new ArrayList<Transaction>();
 		transactionSet.add(transaction);
@@ -31,19 +32,20 @@ public class TransactionSet {
 	public void add(Transaction transaction) {
 		transactionSet.add(transaction);
 	}
+
+	public void addAll(TransactionSet ts) {
+		transactionSet.addAll(ts.transactionSet);
+	}
 	
-//	@Override
-//	public boolean equals(Object t) {
-//		TransactionSet ts = (TransactionSet) t;
-//		if(transactionSet.size() == ts.transactionSet.size())
-////				transactionSet.containsAll(ts.transactionSet) &&
-////				ts.transactionSet.containsAll(transactionSet)) 
-//				{
-//			return true;
-//		} else {
-//			return false;
-//		}
-//	}
+	public boolean containsSingle(TransactionSet ts) {
+		int i = 0;
+		boolean foundMatch = false;
+		while(i < this.getSize() && ts.getSize() > 0 && !foundMatch) {
+			foundMatch = this.getTransaction(i).equals(ts.getTransaction(0));
+			i++;
+		}
+		return foundMatch;
+	}
 	
 	public int getSize() {
 		return transactionSet.size();
