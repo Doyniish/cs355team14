@@ -37,11 +37,11 @@ public class TransactionSet {
 		transactionSet.addAll(ts.transactionSet);
 	}
 	
-	public boolean containsSingle(TransactionSet ts) {
+	public boolean containsSingle(Transaction ts) {
 		int i = 0;
 		boolean foundMatch = false;
 		while(i < this.getSize() && ts.getSize() > 0 && !foundMatch) {
-			foundMatch = this.getTransaction(i).equals(ts.getTransaction(0));
+			foundMatch = this.getTransaction(i).equals(ts);
 			i++;
 		}
 		return foundMatch;

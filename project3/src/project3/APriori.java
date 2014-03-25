@@ -9,13 +9,13 @@ public class APriori {
 	public static void main(String[] args) throws IOException {
 		Timer timer = new Timer();
 		timer.startTimer();
-		TransactionSet set = algorithm(2, 0, "powerpointTransaction");
+		AssociationRuleSet set = algorithm(2, 0, "powerpointTransaction");
 		timer.stopTimer();
 		System.out.println("Timer: " + timer.getTotal() + " ms");
 		System.out.println(set);
 	}
 	
-	public static TransactionSet algorithm(double minSupportLevel, double minConfidenceLevel, String filePath) throws IOException {
+	public static AssociationRuleSet algorithm(double minSupportLevel, double minConfidenceLevel, String filePath) throws IOException {
 		/* Frequent item sets generation */
 		TransactionSet results = new TransactionSet();
 		
@@ -34,6 +34,8 @@ public class APriori {
 		TransactionSet multipleItemSets = filterItems(twoItemCandidateSets, countMultipleItems, minSupportLevel);
 		TransactionSet previousItemSets = filteredSingleItemSets;
 		
+		results.addAll(multipleItemSets);
+		
 		int count = 3;
 		while(multipleItemSets.getSize() > 1) {		// continue cycle until there are 0-1 elements
 			uniqueItems = generateUniqueItems(multipleItemSets);
@@ -44,19 +46,18 @@ public class APriori {
 			countMultipleItems = countItems(multipleItemSets, transactionsFromFile);
 			multipleItemSets = filterItems(multipleItemSets, countMultipleItems, minSupportLevel);
 			
+			results.addAll(multipleItemSets);
 			++count;
-		}
-		if(multipleItemSets.getSize() == 0) {
-			multipleItemSets = previousItemSets;
 		}
 		
 		/* Association rule sets */
+		AssociationRuleSet possibleRuleSets = new AssociationRuleSet();
+		possibleRuleSets = generateAllPossibleAssociations(results);
 		
 		
-		
-		return multipleItemSets;
+		return possibleRuleSets;
 	}
-	
+
 	private static TransactionSet readFromFile(String filepath) throws IOException {
 		TransactionSet transactionsFromFile = new TransactionSet();
 		BufferedReader in = new BufferedReader(new FileReader(filepath));
@@ -112,11 +113,9 @@ public class APriori {
 		TransactionSet candidatesWithDuplicates = generateCandidatesRecursive(new Transaction(), uniqueItems, itemsToAdd); // wrapper method
 		TransactionSet candidates = new TransactionSet();
 		for(int i = 0; i < candidatesWithDuplicates.getSize(); i++) {
-			TransactionSet set = new TransactionSet();
-			set.add(candidatesWithDuplicates.getTransaction(i));
 			Transaction transaction = candidatesWithDuplicates.getTransaction(i);
 			
-			if(!candidates.containsSingle(set)) {
+			if(!candidates.containsSingle(transaction)) {
 				candidates.add(transaction);
 			}
 		}
@@ -126,14 +125,16 @@ public class APriori {
 	private static TransactionSet generateCandidatesRecursive(Transaction transaction, Transaction uniqueItems, int itemsToAdd) {
 		TransactionSet results = new TransactionSet();
 		if(itemsToAdd == 1) {
-			transaction.addItem(uniqueItems.getItem(0));
-			results.add(transaction);
+			for(int i = 0; i < uniqueItems.getSize(); i++) {
+				Transaction transaction2 = new Transaction(transaction);
+				transaction2.addItem(uniqueItems.getItem(i));
+				results.add(transaction2);
+			}
 			return results;
 		} else {
 			for(int i = 0; i < uniqueItems.getSize(); i++) {
 				Transaction transaction2 = new Transaction(transaction);
 				transaction2.addItem(uniqueItems.getItem(i));
-				
 				Transaction uniqueItems2 = new Transaction(uniqueItems);
 				uniqueItems2.remove(uniqueItems.getItem(i));
 				TransactionSet preResults = generateCandidatesRecursive(transaction2, uniqueItems2, itemsToAdd - 1);
@@ -158,16 +159,9 @@ public class APriori {
 		TransactionSet filteredItems = new TransactionSet();
 		for(int i = 0; i < multipleItemSets.getSize(); i++) {
 			TransactionSet requiredItems = generateCandidates(multipleItemSets.getTransaction(i), count);
-			
-//			System.out.println("transaction:");
-//			System.out.println(multipleItemSets.getTransaction(i));
-//			System.out.println("requires:");
-//			System.out.println(requiredItems);
-//			System.out.println();
-			
 			boolean missedMatch = false;
 			for(int j = 0; j < requiredItems.getSize(); j++) {
-				if(!multipleItemSets.getTransaction(i).contains(previousItemSets.getTransaction(j))) {
+				if(!previousItemSets.containsSingle(requiredItems.getTransaction(j))) {
 					missedMatch = true;
 				}
 			}
@@ -188,5 +182,38 @@ public class APriori {
 			}
 		}
 		return countItems;
+	}
+
+	private static AssociationRuleSet generateAllPossibleAssociations(TransactionSet results) {
+		AssociationRuleSet ruleSet = new AssociationRuleSet();
+		for(int i = 0; i < results.getSize(); i++) {
+			AssociationRuleSet rules = generateAllPossibleAssociationsRecursive(results.getTransaction(i), new AssociationRule(), results.getTransaction(i).getSize()); // wrapper method
+			ruleSet.associationRuleSet.addAll(rules.associationRuleSet);
+		}
+		return ruleSet;
+	}
+	
+	private static AssociationRuleSet generateAllPossibleAssociationsRecursive(Transaction transaction, AssociationRule associationRule, int itemsToAdd) {
+		AssociationRuleSet ruleSet = new AssociationRuleSet();
+
+		if(itemsToAdd == 1) {
+			for(int i = 0; i < transaction.getSize(); i++) {
+				AssociationRule associationRule2 = new AssociationRule(associationRule);
+				associationRule2.addAntecedent(transaction.getItem(i));
+				ruleSet.add(associationRule2);
+			}
+			return ruleSet;
+		} else {
+			for(int i = 0; i < transaction.getSize(); i++) {
+				AssociationRule associationRule2 = new AssociationRule(associationRule);
+				associationRule2.addAntecedent(transaction.getItem(i));
+				Transaction transaction2 = new Transaction(transaction);
+				transaction2.remove(transaction.getItem(i));
+				AssociationRuleSet preResults = generateAllPossibleAssociationsRecursive(transaction2, associationRule2, itemsToAdd - 1);
+				
+				ruleSet.addAll(preResults);
+			}
+		}
+		return ruleSet;
 	}
 }
