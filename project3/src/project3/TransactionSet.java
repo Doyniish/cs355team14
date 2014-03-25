@@ -29,6 +29,22 @@ public class TransactionSet {
 		this.minSupportLevel = minSupportLevel;
 	}
 	
+	public double getMinConfidenceLevel() {
+		return minConfidenceLevel;
+	}
+
+	public void setMinConfidenceLevel(double minConfidenceLevel) {
+		this.minConfidenceLevel = minConfidenceLevel;
+	}
+
+	public double getMinSupportLevel() {
+		return minSupportLevel;
+	}
+
+	public void setMinSupportLevel(double minSupportLevel) {
+		this.minSupportLevel = minSupportLevel;
+	}
+
 	public void add(Transaction transaction) {
 		transactionSet.add(transaction);
 	}

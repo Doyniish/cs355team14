@@ -36,10 +36,10 @@ public class Timer {
 
 	// --- getTotal - return the elapsed time
 	long getTotal() {
-		long result = 0;
+		totalTime = 0;
 		if (stopTime > startTime) {
-			result = stopTime - startTime;
+			totalTime = stopTime - startTime;
 		}
-		return result;
+		return totalTime;
 	}
 }	// end - class Timer
