@@ -10,6 +10,7 @@ public class AssociationRule {
 	public AssociationRule() {
 		this.antecedent = new ArrayList<String>();
 		this.consequent = new ArrayList<String>();
+		this.minConfidenceLevel = 0;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -24,6 +25,7 @@ public class AssociationRule {
 		this.antecedent.addAll(antecedent);
 		this.consequent = new ArrayList<String>();
 		this.consequent.addAll(consequent);
+		minConfidenceLevel = 0;
 	}
 	
 	public ArrayList<String> getAntecedent() {
@@ -56,5 +58,34 @@ public class AssociationRule {
 	
 	public void setMinConfidenceLevel(double minConfidenceLevel) {
 		this.minConfidenceLevel = minConfidenceLevel;
+	}
+	
+	public String toString() {
+		String string = "If ";
+		for(int i = 0; i < antecedent.size(); i++) {
+			string = string + antecedent.get(i);
+			if(i == antecedent.size()-1) {
+				string = string + " Then ";
+			} else {
+				string = string + ", ";
+			}
+		}
+		for(int i = 0; i < consequent.size(); i++) {
+			string = string + consequent.get(i);
+			if(i != consequent.size()-1) {
+				string = string + ", ";
+			} else {
+				string = string + " (" + minConfidenceLevel + ")";
+			}
+		}
+		return string;
+	}
+
+	public int getAnteSize() {
+		return this.antecedent.size();
+	}
+	
+	public int getConseqSize() {
+		return this.consequent.size();
 	}
 }

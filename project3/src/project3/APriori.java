@@ -50,10 +50,12 @@ public class APriori {
 			++count;
 		}
 		
+//		System.out.println("Final frequent item sets:");
+//		System.out.println(results);
+		
 		/* Association rule sets */
 		AssociationRuleSet possibleRuleSets = new AssociationRuleSet();
 		possibleRuleSets = generateAllPossibleAssociations(results);
-		
 		
 		return possibleRuleSets;
 	}
@@ -185,15 +187,38 @@ public class APriori {
 	}
 
 	private static AssociationRuleSet generateAllPossibleAssociations(TransactionSet results) {
-		AssociationRuleSet ruleSet = new AssociationRuleSet();
+		AssociationRuleSet ruleSetWithDuplicates = new AssociationRuleSet();
 		for(int i = 0; i < results.getSize(); i++) {
-			AssociationRuleSet rules = generateAllPossibleAssociationsRecursive(results.getTransaction(i), new AssociationRule(), results.getTransaction(i).getSize()); // wrapper method
-			ruleSet.associationRuleSet.addAll(rules.associationRuleSet);
+			AssociationRuleSet rules = generatePossibleAntecedentsRecursive(results.getTransaction(i), new AssociationRule(), results.getTransaction(i).getSize() - 1); // wrapper method
+//			System.out.println(rules);
+//			System.out.println(results.getTransaction(i));
+			rules = generatePossibleConsequents(rules, results.getTransaction(i));
+
+			for(int j = 0; j < rules.getSize(); j++) {
+				Transaction unusedItems = new Transaction(results.getTransaction(i));
+				for(int k = 0; k < rules.getRule(j).getAnteSize(); k++) {
+					unusedItems.remove(rules.getRule(j).getAntecedent().get(k));
+				}
+//				System.out.println(rules.getRule(j) + " " + unusedItems);
+			}
+			
+			ruleSetWithDuplicates.associationRuleSet.addAll(rules.associationRuleSet);
+		}
+		AssociationRuleSet ruleSet = new AssociationRuleSet();
+		for(int i = 0; i < ruleSetWithDuplicates.getSize(); i++) {
+			AssociationRule rule = ruleSetWithDuplicates.getRule(i);
+
+			if(!ruleSet.containsRule(rule)) {
+				ruleSet.add(rule);
+			} else {
+				System.out.println("Ruleset contains \"" + rule + "\"");
+				System.out.println(ruleSet + "\n");
+			}
 		}
 		return ruleSet;
 	}
-	
-	private static AssociationRuleSet generateAllPossibleAssociationsRecursive(Transaction transaction, AssociationRule associationRule, int itemsToAdd) {
+
+	private static AssociationRuleSet generatePossibleAntecedentsRecursive(Transaction transaction, AssociationRule associationRule, int itemsToAdd) {
 		AssociationRuleSet ruleSet = new AssociationRuleSet();
 
 		if(itemsToAdd == 1) {
@@ -204,14 +229,32 @@ public class APriori {
 			}
 			return ruleSet;
 		} else {
+			if(associationRule.getAntecedent().size() > 0) {
+				ruleSet.add(associationRule);
+			}
 			for(int i = 0; i < transaction.getSize(); i++) {
 				AssociationRule associationRule2 = new AssociationRule(associationRule);
 				associationRule2.addAntecedent(transaction.getItem(i));
 				Transaction transaction2 = new Transaction(transaction);
 				transaction2.remove(transaction.getItem(i));
-				AssociationRuleSet preResults = generateAllPossibleAssociationsRecursive(transaction2, associationRule2, itemsToAdd - 1);
-				
+				ruleSet.add(associationRule2);
+				AssociationRuleSet preResults = generatePossibleAntecedentsRecursive(transaction2, associationRule2, itemsToAdd - 1);
 				ruleSet.addAll(preResults);
+			}
+		}
+		return ruleSet;
+	}
+	
+	private static AssociationRuleSet generatePossibleConsequents(AssociationRuleSet rules, Transaction transaction) {
+		AssociationRuleSet ruleSet = new AssociationRuleSet();
+		
+		for(int i = 0; i < rules.getSize(); i++) {
+			for(int j = 0; j < transaction.getSize(); j++) {
+				String item = transaction.getItem(j);
+				if(!rules.getRule(i).getAntecedent().contains(item)) {
+					rules.getRule(i).addConsequent(item);
+					ruleSet.add(rules.getRule(i));
+				}
 			}
 		}
 		return ruleSet;

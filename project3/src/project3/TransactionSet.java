@@ -1,6 +1,7 @@
 package project3;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class TransactionSet {
 	private double minConfidenceLevel;
@@ -54,6 +55,7 @@ public class TransactionSet {
 	}
 	
 	public boolean containsSingle(Transaction ts) {
+		Collections.sort(ts.items);
 		int i = 0;
 		boolean foundMatch = false;
 		while(i < this.getSize() && ts.getSize() > 0 && !foundMatch) {
