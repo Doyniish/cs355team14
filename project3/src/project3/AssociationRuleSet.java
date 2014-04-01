@@ -43,7 +43,7 @@ public class AssociationRuleSet {
 		
 		int i = 0;
 		boolean foundMatch = false;
-		if(ar.getAnteSize() < 1 || ar.getConseqSize() < 1) {
+		if(ar.getAnteSize() > 0 || ar.getConseqSize() > 0) {
 			while(i < this.getSize() && !foundMatch) {
 				foundMatch = this.getRule(i).getAntecedent().equals(ar.getAntecedent()) && this.getRule(i).getConsequent().equals(ar.getConsequent()) ;
 				i++;

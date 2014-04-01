@@ -3,13 +3,14 @@ package project3;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 
 public class APriori {
 	public static void main(String[] args) throws IOException {
 		Timer timer = new Timer();
 		timer.startTimer();
-		AssociationRuleSet set = algorithm(2, 0, "powerpointTransaction");
+		AssociationRuleSet set = algorithm(2, .7, "powerpointTransaction");
 		timer.stopTimer();
 		System.out.println("Timer: " + timer.getTotal() + " ms");
 		System.out.println(set);
@@ -50,14 +51,12 @@ public class APriori {
 			++count;
 		}
 		
-//		System.out.println("Final frequent item sets:");
-//		System.out.println(results);
-		
 		/* Association rule sets */
-		AssociationRuleSet possibleRuleSets = new AssociationRuleSet();
-		possibleRuleSets = generateAllPossibleAssociations(results);
+		AssociationRuleSet ruleSets = new AssociationRuleSet();
+		ruleSets = generateAllPossibleAssociations(results);
+		ruleSets = filterByConfidence(ruleSets, minConfidenceLevel);
 		
-		return possibleRuleSets;
+		return ruleSets;
 	}
 
 	private static TransactionSet readFromFile(String filepath) throws IOException {
@@ -190,8 +189,6 @@ public class APriori {
 		AssociationRuleSet ruleSetWithDuplicates = new AssociationRuleSet();
 		for(int i = 0; i < results.getSize(); i++) {
 			AssociationRuleSet rules = generatePossibleAntecedentsRecursive(results.getTransaction(i), new AssociationRule(), results.getTransaction(i).getSize() - 1); // wrapper method
-//			System.out.println(rules);
-//			System.out.println(results.getTransaction(i));
 			rules = generatePossibleConsequents(rules, results.getTransaction(i));
 
 			for(int j = 0; j < rules.getSize(); j++) {
@@ -199,7 +196,6 @@ public class APriori {
 				for(int k = 0; k < rules.getRule(j).getAnteSize(); k++) {
 					unusedItems.remove(rules.getRule(j).getAntecedent().get(k));
 				}
-//				System.out.println(rules.getRule(j) + " " + unusedItems);
 			}
 			
 			ruleSetWithDuplicates.associationRuleSet.addAll(rules.associationRuleSet);
@@ -210,9 +206,6 @@ public class APriori {
 
 			if(!ruleSet.containsRule(rule)) {
 				ruleSet.add(rule);
-			} else {
-				System.out.println("Ruleset contains \"" + rule + "\"");
-				System.out.println(ruleSet + "\n");
 			}
 		}
 		return ruleSet;
@@ -259,4 +252,32 @@ public class APriori {
 		}
 		return ruleSet;
 	}
+
+	private static AssociationRuleSet filterByConfidence(AssociationRuleSet possibleRuleSets, double minConfidenceLevel) {
+		AssociationRuleSet finalRules = new AssociationRuleSet();
+		for(int i = 0; i < possibleRuleSets.getSize(); i++) {
+			AssociationRule candidateRule = possibleRuleSets.getRule(i);
+			int supportCountX = 0;	// count of antecedent
+			int supportCountXUY = 0;	// count of antecedent and consequent
+			
+			for(int j = 0; j < possibleRuleSets.getSize(); j++) {
+				if(possibleRuleSets.getRule(j).contains(candidateRule.getAntecedent())) {
+					++supportCountX;
+				}
+				ArrayList<String> items = new ArrayList<String>();
+				items.addAll(possibleRuleSets.getRule(i).getAntecedent());
+				items.addAll(possibleRuleSets.getRule(i).getConsequent());
+				if(possibleRuleSets.getRule(j).contains(items)) {
+					++supportCountXUY;
+				}
+			}
+			double confidenceLevel = (double) supportCountXUY / (double) supportCountX;
+			System.out.println("Confidence Level: " + confidenceLevel + " " + possibleRuleSets.getRule(i));
+			if(confidenceLevel >= minConfidenceLevel) {
+				finalRules.add(possibleRuleSets.getRule(i));
+			}
+		}
+		return finalRules;
+	}
+	
 }

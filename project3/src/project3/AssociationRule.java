@@ -28,6 +28,10 @@ public class AssociationRule {
 		minConfidenceLevel = 0;
 	}
 	
+	public boolean contains(ArrayList<String> items) {
+		return this.getAntecedent().containsAll(items) || this.getConsequent().containsAll(items);
+	}
+	
 	public ArrayList<String> getAntecedent() {
 		return antecedent;
 	}
