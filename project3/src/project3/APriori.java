@@ -10,9 +10,15 @@ public class APriori {
 	public static void main(String[] args) throws IOException {
 		Timer timer = new Timer();
 		timer.startTimer();
-		AssociationRuleSet set = algorithm(2, .7, "powerpointTransaction");
+		test1();
+//		AssociationRuleSet set = algorithm(2, .7, "powerpointTransaction");
 		timer.stopTimer();
 		System.out.println("Timer: " + timer.getTotal() + " ms");
+//		System.out.println(set);
+	}
+	
+	public static void test1() throws IOException {
+		AssociationRuleSet set = algorithm(.25, .5, "transactions1");
 		System.out.println(set);
 	}
 	
@@ -54,6 +60,7 @@ public class APriori {
 		/* Association rule sets */
 		AssociationRuleSet ruleSets = new AssociationRuleSet();
 		ruleSets = generateAllPossibleAssociations(results);
+		System.out.println(ruleSets);
 		ruleSets = filterByConfidence(ruleSets, minConfidenceLevel);
 		
 		return ruleSets;
@@ -256,24 +263,24 @@ public class APriori {
 	private static AssociationRuleSet filterByConfidence(AssociationRuleSet possibleRuleSets, double minConfidenceLevel) {
 		AssociationRuleSet finalRules = new AssociationRuleSet();
 		for(int i = 0; i < possibleRuleSets.getSize(); i++) {
-			AssociationRule candidateRule = possibleRuleSets.getRule(i);
 			int supportCountX = 0;	// count of antecedent
 			int supportCountXUY = 0;	// count of antecedent and consequent
+			ArrayList<String> itemsX = possibleRuleSets.getRule(i).getAntecedent();
+			ArrayList<String> itemsY = possibleRuleSets.getRule(i).getConsequent();
 			
 			for(int j = 0; j < possibleRuleSets.getSize(); j++) {
-				if(possibleRuleSets.getRule(j).contains(candidateRule.getAntecedent())) {
+				if(possibleRuleSets.getRule(j).contains(itemsX)) {
 					++supportCountX;
-				}
-				ArrayList<String> items = new ArrayList<String>();
-				items.addAll(possibleRuleSets.getRule(i).getAntecedent());
-				items.addAll(possibleRuleSets.getRule(i).getConsequent());
-				if(possibleRuleSets.getRule(j).contains(items)) {
-					++supportCountXUY;
+					
+					if(possibleRuleSets.getRule(j).contains(itemsY)) {	// must contain antecedent to contain antecedent&consequent
+						++supportCountXUY;
+					}
 				}
 			}
 			double confidenceLevel = (double) supportCountXUY / (double) supportCountX;
-			System.out.println("Confidence Level: " + confidenceLevel + " " + possibleRuleSets.getRule(i));
+
 			if(confidenceLevel >= minConfidenceLevel) {
+				possibleRuleSets.getRule(i).setConfidenceLevel(confidenceLevel);
 				finalRules.add(possibleRuleSets.getRule(i));
 			}
 		}

@@ -5,17 +5,17 @@ import java.util.ArrayList;
 public class AssociationRule {
 	private ArrayList<String> antecedent;
 	private ArrayList<String> consequent;
-	private double minConfidenceLevel;
+	private double confidenceLevel;
 	
 	public AssociationRule() {
 		this.antecedent = new ArrayList<String>();
 		this.consequent = new ArrayList<String>();
-		this.minConfidenceLevel = 0;
+		this.confidenceLevel = 0;
 	}
 	
 	@SuppressWarnings("unchecked")
 	public AssociationRule(AssociationRule ar) {
-		this.minConfidenceLevel = ar.minConfidenceLevel;
+		this.confidenceLevel = ar.confidenceLevel;
 		this.antecedent = (ArrayList<String>) ar.antecedent.clone();
 		this.consequent = (ArrayList<String>) ar.consequent.clone();
 	}
@@ -25,7 +25,7 @@ public class AssociationRule {
 		this.antecedent.addAll(antecedent);
 		this.consequent = new ArrayList<String>();
 		this.consequent.addAll(consequent);
-		minConfidenceLevel = 0;
+		confidenceLevel = 0;
 	}
 	
 	public boolean contains(ArrayList<String> items) {
@@ -56,12 +56,12 @@ public class AssociationRule {
 		this.consequent = consequent;
 	}
 	
-	public double getMinConfidenceLevel() {
-		return minConfidenceLevel;
+	public double getConfidenceLevel() {
+		return confidenceLevel;
 	}
 	
-	public void setMinConfidenceLevel(double minConfidenceLevel) {
-		this.minConfidenceLevel = minConfidenceLevel;
+	public void setConfidenceLevel(double confidenceLevel) {
+		this.confidenceLevel = confidenceLevel;
 	}
 	
 	public String toString() {
@@ -79,7 +79,7 @@ public class AssociationRule {
 			if(i != consequent.size()-1) {
 				string = string + ", ";
 			} else {
-				string = string + " (" + minConfidenceLevel + ")";
+				string = string + " (" + confidenceLevel + ")";
 			}
 		}
 		return string;
