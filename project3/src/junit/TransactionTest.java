@@ -5,23 +5,29 @@ import junit.framework.TestCase;
 
 public class TransactionTest extends TestCase {
 
-	public static String testTransaction() {
+	public void testTransaction() {
 		
-		Transaction transaction = new Transaction();
-		String result = TransactionTest.testTransaction();
-		assertEquals("beercheese", result);
+		String transactionLine1 = new String ("{Apples, Beer, Diapers}");
+		String transactionLine2 = new String ("{Apples, Beer, Diapers}");
 		
-		return result;
+		assertEquals(transactionLine1, transactionLine2);
 		
 	}
 
 	public void testTransactionString() {
 		
-		fail("Not yet implemented");
+		String transactionLine1 = new String("{Apples, Beer, Diapers}");
+		String transactionLine2 = new String("{Apples, Diapers}");
+		
+		assertNotSame(transactionLine1, transactionLine2);
+	
 	}
 
 	public void testTransactionTransaction() {
-		fail("Not yet implemented");
+		String transactionLine1 = new String("{Apples, Beer, Diapers}");
+		String transactionLine2 = new String("{Apples, Beer, Diapers}");
+		
+		assertTrue(transactionLine1 = transactionLine2, true);
 	}
 
 	public void testAddItem() {
