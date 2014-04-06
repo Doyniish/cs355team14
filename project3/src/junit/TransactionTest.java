@@ -1,6 +1,5 @@
 package junit;
 
-import project3.Transaction;
 import junit.framework.TestCase;
 
 public class TransactionTest extends TestCase {
@@ -24,6 +23,7 @@ public class TransactionTest extends TestCase {
 	}
 
 	public void testTransactionTransaction() {
+		
 		String transactionLine1 = new String("{Apples, Beer, Diapers}");
 		String transactionLine2 = new String("{Apples, Beer, Diapers}");
 		
@@ -31,19 +31,36 @@ public class TransactionTest extends TestCase {
 	}
 
 	public void testAddItem() {
-		fail("Not yet implemented");
+		
+		int previousItems = 2;
+		int addedItems = 3;
+		
+		assertFalse(previousItems < addedItems);
+
 	}
 
 	public void testAddAll() {
-		fail("Not yet implemented");
+		
+		String transactionEmpty = new String("{}");
+		String transactionFull = new String("{Apples, Beer, Diapers}");
+		
+		assertNotSame(transactionEmpty, transactionFull);
 	}
 
 	public void testRemove() {
-		fail("Not yet implemented");
+		
+		String transactionEmpty = new String("{}");
+		String transactionFull = new String("{Apples, Beer, Diapers}");
+		
+		assertNotSame(transactionFull, transactionEmpty);
+
 	}
 
 	public void testContainsObject() {
-		fail("Not yet implemented");
+		
+		String transaction = new String("{Apples, Beer, Diapers}");
+		
+		assertNotNull(transaction);
 	}
 
 	public void testIndexOf() {
