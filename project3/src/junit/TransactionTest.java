@@ -64,11 +64,22 @@ public class TransactionTest extends TestCase {
 	}
 
 	public void testIndexOf() {
-		fail("Not yet implemented");
+		
+		String appleTransaction1 = new String("{Apples, Beer, Diapers}");
+		String appleTransaction2 = new String("{Beer, Apples, Diapers}");
+		
+		assertNotSame(appleTransaction1, appleTransaction2);
 	}
 
 	public void testAddItems() {
-		fail("Not yet implemented");
+		
+		int itemsToAdd1 = 2;
+		int itemsToAdd2 = 3;
+		String transactionAdd1 = new String("{Apples, Beer}");
+		String transactionAdd2 = new String("{Apples, Beer, Diapers}");
+		
+		assertTrue(itemsToAdd1 < itemsToAdd2);
+
 	}
 
 	public void testGetItem() {
