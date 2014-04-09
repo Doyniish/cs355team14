@@ -65,11 +65,11 @@ public class AssociationRule {
 	}
 	
 	public String toString() {
-		String string = "If ";
+		String string = "IF ";
 		for(int i = 0; i < antecedent.size(); i++) {
 			string = string + antecedent.get(i);
 			if(i == antecedent.size()-1) {
-				string = string + " Then ";
+				string = string + " THEN ";
 			} else {
 				string = string + ", ";
 			}
