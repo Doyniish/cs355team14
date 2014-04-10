@@ -1,4 +1,4 @@
-package junit;
+package edu.uwec.cs355.group14.tests;
 
 import project3.Transaction;
 import junit.framework.TestCase;
