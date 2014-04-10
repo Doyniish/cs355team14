@@ -1,5 +1,6 @@
 package junit;
 
+import project3.Transaction;
 import junit.framework.TestCase;
 
 public class TransactionTest extends TestCase {
@@ -83,14 +84,30 @@ public class TransactionTest extends TestCase {
 	}
 
 	public void testGetItem() {
-		fail("Not yet implemented");
+		
+		String itemToGet = new String("Apples");
+		String itemsToAddTo = new String("{Beer, Diapers}");
+		
+		itemToGet.compareTo(itemsToAddTo);
+
+		assertFalse(itemToGet = itemsToAddTo, false);
 	}
 
 	public void testGetItems() {
-		fail("Not yet implemented");
+		
+		Transaction itemsToGet = new Transaction("{Apples, Beer}");
+		Transaction itemsRecieved = new Transaction("{Diapers}");
+		itemsToGet.getItems();
+		testGetItems();
+		
+		assertTrue(itemsToGet != itemsRecieved);
+		
 	}
 
 	public void testGetSize() {
+		
+		int numberOfItems = 3;
+		
 		fail("Not yet implemented");
 	}
 
