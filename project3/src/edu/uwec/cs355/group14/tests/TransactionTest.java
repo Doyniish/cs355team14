@@ -105,22 +105,35 @@ public class TransactionTest extends TestCase {
 	}
 
 	public void testGetSize() {
+		Transaction items = new Transaction("{Apples, Beer, Diapers}");
+		items.getSize();
 		
-		int numberOfItems = 3;
-		
-		fail("Not yet implemented");
+		assertNotNull(items.getSize());
 	}
 
 	public void testEqualsTransaction() {
-		fail("Not yet implemented");
+		Transaction items = new Transaction();
+		String transactionSet1 = "{Apples, Beer, Diapers}";
+		String transactionSet2 = "{Apples, Beer, Diapers}";
+		
+		assertTrue(transactionSet1 == transactionSet2);
 	}
 
 	public void testContainsTransaction() {
-		fail("Not yet implemented");
+		Transaction transaction = new Transaction("{Apples, Beer, Diapers}");
+		
+		assertTrue(transaction.contains("Apples, Beer, Diapers"));
 	}
 
 	public void testToString() {
-		fail("Not yet implemented");
+		Transaction transaction = new Transaction("{Apples, Beer, Diapers}");
+		String toString = new String();
+		transaction.toString();
+		toString.toString();
+		
+		assertFalse(transaction.toString() == toString.toString());
+		
+		
 	}
 
 }
