@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class TransactionSet {
-	private ArrayList<Transaction> transactionSet;
-	private double minConfidenceLevel;
-	private double minSupportLevel;
+	private ArrayList<Transaction> transactionSet = new ArrayList<Transaction>();;
+	private double minSupportLevel = 0;
+	private double minConfidenceLevel = 0;
 	
 	/*		Constructors	*/
-	public TransactionSet() {
-		this.transactionSet = new ArrayList<Transaction>();
+	public TransactionSet(double minSupportLevel, double minConfidenceLevel) {
+		this.minSupportLevel = minSupportLevel;
+		this.minConfidenceLevel = minConfidenceLevel;
 	}
 	
 	public TransactionSet(Transaction transaction) {
@@ -19,11 +20,22 @@ public class TransactionSet {
 		this.minSupportLevel = 0;
 	}
 	
-	public TransactionSet(Transaction transaction, double minSupportLevel) {
+	public TransactionSet(Transaction transaction, double minSupportLevel, double minConfidenceLevel) {
 		this.transactionSet = new ArrayList<Transaction>();
 		this.transactionSet.add(transaction);
-		this.minConfidenceLevel = 0;
+		this.minConfidenceLevel = minConfidenceLevel;
 		this.minSupportLevel = minSupportLevel;
+	}
+	
+	public TransactionSet(TransactionSet transactionSet) {	// copy constructor
+//		this.transactionSet = new ArrayList<Transaction>();
+//		for(Transaction transaction : transactionSet.getTransactionSet()) {
+//			Transaction newTransaction = new Transaction(transaction);
+//			this.transactionSet.add(newTransaction);
+//		}
+		this.transactionSet = transactionSet.getTransactionSet();
+		this.minConfidenceLevel = transactionSet.getMinConfidenceLevel();
+		this.minSupportLevel = transactionSet.getMinSupportLevel();
 	}
 	
 	/*		Original Methods 	*/

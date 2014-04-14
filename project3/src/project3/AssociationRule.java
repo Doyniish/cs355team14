@@ -1,6 +1,9 @@
 package project3;
 
 import java.util.ArrayList;
+import static java.lang.Double.valueOf;
+import static java.util.Locale.US;
+import static java.lang.String.format;
 
 public class AssociationRule {
 	private ArrayList<String> antecedent;
@@ -13,11 +16,18 @@ public class AssociationRule {
 		this.confidenceLevel = 0;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public AssociationRule(AssociationRule ar) {
+		this.antecedent = ar.antecedent;
+		this.consequent = ar.consequent;
 		this.confidenceLevel = ar.confidenceLevel;
-		this.antecedent = (ArrayList<String>) ar.antecedent.clone();
-		this.consequent = (ArrayList<String>) ar.consequent.clone();
+		this.antecedent = new ArrayList<String>();
+		for(String antecedent : ar.getAntecedent()) {
+			this.antecedent.add(antecedent);
+		}
+		this.consequent = new ArrayList<String>();
+		for(String consequent : ar.getConsequent()) {
+			this.consequent.add(consequent);
+		}
 	}
 	
 	public AssociationRule(ArrayList<String> antecedent, ArrayList<String> consequent) {
@@ -25,12 +35,14 @@ public class AssociationRule {
 		this.antecedent.addAll(antecedent);
 		this.consequent = new ArrayList<String>();
 		this.consequent.addAll(consequent);
-		confidenceLevel = 0;
+		this.confidenceLevel = 0;
 	}
 	
 	public boolean contains(ArrayList<String> items) {
 		return this.getAntecedent().containsAll(items) || this.getConsequent().containsAll(items);
 	}
+	
+	
 	
 	public ArrayList<String> getAntecedent() {
 		return antecedent;
@@ -61,7 +73,7 @@ public class AssociationRule {
 	}
 	
 	public void setConfidenceLevel(double confidenceLevel) {
-		this.confidenceLevel = confidenceLevel;
+		this.confidenceLevel = valueOf(format(US, "%1$.5f", confidenceLevel));
 	}
 	
 	public String toString() {

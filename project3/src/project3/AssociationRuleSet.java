@@ -4,10 +4,25 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class AssociationRuleSet {
-	public ArrayList<AssociationRule> associationRuleSet;
+	private ArrayList<AssociationRule> associationRuleSet;
+	private double minConfidenceLevel;
 
 	public AssociationRuleSet() {
 		associationRuleSet = new ArrayList<AssociationRule>();
+		this.setMinConfidenceLevel(0);
+	}
+	
+	public AssociationRuleSet(double minConfidenceLevel) {
+		associationRuleSet = new ArrayList<AssociationRule>();
+		this.setMinConfidenceLevel(minConfidenceLevel);
+	}
+	
+	public AssociationRuleSet(AssociationRuleSet associationRuleSet) {	// copy constructor
+		this.associationRuleSet = new ArrayList<AssociationRule>();
+		for(AssociationRule associationRule : associationRuleSet.getRules()) {
+			AssociationRule newAssociationRule = new AssociationRule(associationRule);
+			this.associationRuleSet.add(newAssociationRule);
+		}
 	}
 	
 	public void add(AssociationRule associationRule) {
@@ -20,6 +35,10 @@ public class AssociationRuleSet {
 	
 	public AssociationRule getRule(int i) {
 		return associationRuleSet.get(i);
+	}
+	
+	public ArrayList<AssociationRule> getRules() {
+		return associationRuleSet;
 	}
 	
 	public String toString() {
@@ -50,5 +69,13 @@ public class AssociationRuleSet {
 			}
 		}
 		return foundMatch;
+	}
+
+	public double getMinConfidenceLevel() {
+		return minConfidenceLevel;
+	}
+
+	public void setMinConfidenceLevel(double minConfidenceLevel) {
+		this.minConfidenceLevel = minConfidenceLevel;
 	}
 }

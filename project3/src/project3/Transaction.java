@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class Transaction {
 	private ArrayList<String> items;
 	private double minSupportLevel;
+	private double actualSupportLevel;
 	private int count;
 	
 	/*		Constructors	*/
@@ -24,16 +25,21 @@ public class Transaction {
 		this.items = new ArrayList<String>();
 		this.count = 0;
 		this.minSupportLevel = minSupportLevel;
+		this.actualSupportLevel = 0;
 		if(!transactionLine.equals("")) {
 			this.addItems(transactionLine);
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	public Transaction(Transaction ts) {									// copy constructor
-		this.items = (ArrayList<String>) ts.items.clone();
+		this.items = new ArrayList<String>();
+		for(String string : ts.items) {
+			this.items.add(string);
+		}
+//		this.items = ts.getItems();
 		this.minSupportLevel = ts.minSupportLevel;
-		this.count = 0;
+		this.count = ts.count;
+		this.actualSupportLevel = ts.actualSupportLevel;
 	}
 
 	/*			Original Methods		*/
@@ -85,7 +91,7 @@ public class Transaction {
 			if(i != items.size() - 1) {
 				toPrint = toPrint + ", ";
 			} else {
-				toPrint = toPrint + "}";
+				toPrint = toPrint + "} (" + this.actualSupportLevel + ")";
 			}
 		}
 		return toPrint;
@@ -93,10 +99,6 @@ public class Transaction {
 	
 	public void incrementCount() {
 		this.count += 1;
-	}
-	
-	public double getActualSupportLevel(int transactionTotal) {
-		return (double) this.count / (double) transactionTotal;
 	}
 	
 	/* Getters and Setters, etc.	*/
@@ -154,5 +156,13 @@ public class Transaction {
 
 	public void setCount(int count) {
 		this.count = count;
+	}
+	
+	public double getActualSupportLevel() {
+		return actualSupportLevel;
+	}
+
+	public void setActualSupportLevel(double actualSupportLevel) {
+		this.actualSupportLevel = actualSupportLevel;
 	}
 }
