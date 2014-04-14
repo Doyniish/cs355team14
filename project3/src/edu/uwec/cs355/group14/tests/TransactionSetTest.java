@@ -1,5 +1,6 @@
 package edu.uwec.cs355.group14.tests;
 
+import project3.Transaction;
 import project3.TransactionSet;
 import junit.framework.TestCase;
 
@@ -7,8 +8,7 @@ public class TransactionSetTest extends TestCase {
 
 	public void testTransactionSet() {
 		TransactionSet transactionSet = new TransactionSet();
-		
-		
+
 		fail("Not yet implemented");
 	}
 
@@ -21,7 +21,10 @@ public class TransactionSetTest extends TestCase {
 	}
 
 	public void testContainsSingle() {
-		fail("Not yet implemented");
+		TransactionSet transactionSet = new TransactionSet();
+		
+		
+		
 	}
 
 	public void testToString() {

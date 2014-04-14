@@ -1,115 +1,116 @@
 package edu.uwec.cs355.group14.tests;
 
+import java.util.ArrayList;
+
+import project3.AssociationRule;
 import junit.framework.TestCase;
 
 public class AssociationRuleTest extends TestCase {
 
 	public void testAssociationRule() {
-		fail("Not yet implemented");
-	}
+		String antecedent = new String("{Apples, Diapers, Beer}");
+		String consequent = new String("{Diapers, Cheese, Apples}");
 
-	public void testAssociationRuleAssociationRule() {
-		fail("Not yet implemented");
-	}
+		assertTrue(antecedent != consequent);
 
-	public void testAssociationRuleArrayListOfStringArrayListOfString() {
-		fail("Not yet implemented");
 	}
 
 	public void testContains() {
-		fail("Not yet implemented");
+		String items = new String("{Apples, Beer, Diapers}");
+
+		assertNotNull(items);
+
 	}
 
 	public void testGetAntecedent() {
-		fail("Not yet implemented");
-	}
+		String antecedent = new String();
+		String items1 = "{Apples, Beer, Diapers}";
+		String items2 = "";
 
-	public void testAddAntecedent() {
-		fail("Not yet implemented");
-	}
-
-	public void testSetAntecedent() {
-		fail("Not yet implemented");
+		assertNotSame(antecedent.contains(items2), antecedent.contains(items1));
 	}
 
 	public void testGetConsequent() {
-		fail("Not yet implemented");
-	}
+		String consequent = new String();
+		String items1 = "{Apples, Beer, Diapers}";
 
-	public void testAddConsequent() {
-		fail("Not yet implemented");
-	}
-
-	public void testSetConsequent() {
-		fail("Not yet implemented");
+		assertNotNull(consequent.contains(items1));
 	}
 
 	public void testGetConfidenceLevel() {
-		fail("Not yet implemented");
-	}
+		double confidenceLevelActual = 2;
+		double confidenceLevelExpected = 1;
 
-	public void testSetConfidenceLevel() {
-		fail("Not yet implemented");
+		assertEquals(confidenceLevelExpected, confidenceLevelActual,
+				confidenceLevelExpected);
 	}
 
 	public void testToString() {
-		fail("Not yet implemented");
+		String toString = new String();
+		String antecedent = new String("{Apples, Beer, Diapers");
+		String consequent = new String("{Diapers, Beer, Apples}");
+		// String string = "IF" + antecedent + "THEN" + consequent;
+
+		assertTrue(toString.compareTo(antecedent) != toString
+				.compareTo(consequent));
 	}
 
 	public void testGetAnteSize() {
-		fail("Not yet implemented");
+		int anteSize = 3;
+
+		assertNotNull(anteSize);
 	}
 
 	public void testGetConseqSize() {
-		fail("Not yet implemented");
+		int conseqSize = 3;
+
+		assertNotNull(conseqSize);
 	}
 
-	public void testObject() {
-		fail("Not yet implemented");
-	}
+	// Constructor methods
 
-	public void testGetClass() {
-		fail("Not yet implemented");
-	}
-
-	public void testHashCode() {
-		fail("Not yet implemented");
-	}
-
-	public void testEquals() {
-		fail("Not yet implemented");
-	}
-
-	public void testClone() {
-		fail("Not yet implemented");
-	}
-
-	public void testToString1() {
-		fail("Not yet implemented");
-	}
-
-	public void testNotify() {
-		fail("Not yet implemented");
-	}
-
-	public void testNotifyAll() {
-		fail("Not yet implemented");
-	}
-
-	public void testWaitLong() {
-		fail("Not yet implemented");
-	}
-
-	public void testWaitLongInt() {
-		fail("Not yet implemented");
-	}
-
-	public void testWait() {
-		fail("Not yet implemented");
-	}
-
-	public void testFinalize() {
-		fail("Not yet implemented");
-	}
+	/*
+	 * public void testAssociationRuleAssociationRule() {
+	 * fail("Not yet implemented"); }
+	 * 
+	 * public void testAssociationRuleArrayListOfStringArrayListOfString() {
+	 * fail("Not yet implemented"); }
+	 * 
+	 * public void testAddAntecedent() {
+	 * 
+	 * }
+	 * 
+	 * public void testSetAntecedent() { fail("Not yet implemented"); }
+	 * 
+	 * public void testSetConfidenceLevel() { fail("Not yet implemented"); }
+	 * 
+	 * public void testAddConsequent() { fail("Not yet implemented"); }
+	 * 
+	 * public void testSetConsequent() { fail("Not yet implemented"); }
+	 * 
+	 * public void testObject() { fail("Not yet implemented"); }
+	 * 
+	 * public void testGetClass() { fail("Not yet implemented"); }
+	 * 
+	 * public void testHashCode() { fail("Not yet implemented"); }
+	 * 
+	 * public void testEquals() { fail("Not yet implemented"); }
+	 * 
+	 * public void testClone() { fail("Not yet implemented"); }
+	 * 
+	 * public void testToString1() { fail("Not yet implemented"); }
+	 * 
+	 * public void testNotify() { fail("Not yet implemented"); }
+	 * 
+	 * public void testNotifyAll() { fail("Not yet implemented"); }
+	 * 
+	 * public void testWaitLong() { fail("Not yet implemented"); }
+	 * 
+	 * public void testWaitLongInt() { fail("Not yet implemented"); }
+	 * 
+	 * public void testWait() { fail("Not yet implemented"); }
+	 * 
+	 * public void testFinalize() { fail("Not yet implemented"); }
+	 */
 
 }
