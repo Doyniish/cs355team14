@@ -37,10 +37,14 @@ public class AssociationRuleSet {
 		return associationRuleSet.get(i);
 	}
 	
+<<<<<<< HEAD
 	public ArrayList<AssociationRule> getRules() {
 		return associationRuleSet;
 	}
 	
+=======
+	@Override
+>>>>>>> 8c4115afa45e0f5bb98c595536fe205e5c0c02cc
 	public String toString() {
 		String arset = "";
 		for(int i = 0; i < associationRuleSet.size(); i++) {

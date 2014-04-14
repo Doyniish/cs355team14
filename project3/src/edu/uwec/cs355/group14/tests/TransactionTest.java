@@ -1,5 +1,6 @@
-package junit;
+package edu.uwec.cs355.group14.tests;
 
+import project3.Transaction;
 import junit.framework.TestCase;
 
 public class TransactionTest extends TestCase {
@@ -83,27 +84,56 @@ public class TransactionTest extends TestCase {
 	}
 
 	public void testGetItem() {
-		fail("Not yet implemented");
+		
+		String itemToGet = new String("Apples");
+		String itemsToAddTo = new String("{Beer, Diapers}");
+		
+		itemToGet.compareTo(itemsToAddTo);
+
+		assertFalse(itemToGet = itemsToAddTo, false);
 	}
 
 	public void testGetItems() {
-		fail("Not yet implemented");
+		
+		Transaction itemsToGet = new Transaction("{Apples, Beer}");
+		Transaction itemsRecieved = new Transaction("{Diapers}");
+		itemsToGet.getItems();
+		testGetItems();
+		
+		assertTrue(itemsToGet != itemsRecieved);
+		
 	}
 
 	public void testGetSize() {
-		fail("Not yet implemented");
+		Transaction items = new Transaction("{Apples, Beer, Diapers}");
+		items.getSize();
+		
+		assertNotNull(items.getSize());
 	}
 
 	public void testEqualsTransaction() {
-		fail("Not yet implemented");
+		Transaction items = new Transaction();
+		String transactionSet1 = "{Apples, Beer, Diapers}";
+		String transactionSet2 = "{Apples, Beer, Diapers}";
+		
+		assertTrue(transactionSet1 == transactionSet2);
 	}
 
 	public void testContainsTransaction() {
-		fail("Not yet implemented");
+		Transaction transaction = new Transaction("{Apples, Beer, Diapers}");
+		
+		assertTrue(transaction.contains("Apples, Beer, Diapers"));
 	}
 
 	public void testToString() {
-		fail("Not yet implemented");
+		Transaction transaction = new Transaction("{Apples, Beer, Diapers}");
+		String toString = new String();
+		transaction.toString();
+		toString.toString();
+		
+		assertFalse(transaction.toString() == toString.toString());
+		
+		
 	}
 
 }

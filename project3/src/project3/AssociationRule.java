@@ -76,6 +76,7 @@ public class AssociationRule {
 		this.confidenceLevel = valueOf(format(US, "%1$.5f", confidenceLevel));
 	}
 	
+	@Override
 	public String toString() {
 		String string = "IF ";
 		for(int i = 0; i < antecedent.size(); i++) {
