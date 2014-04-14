@@ -30,7 +30,7 @@ public class MySQL {
 			return;
 		}
 		try { 
-			cn.close(); 
+			cn.close();
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 		} finally {

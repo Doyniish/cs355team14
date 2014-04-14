@@ -23,6 +23,7 @@ public class AssociationRuleSet {
 			AssociationRule newAssociationRule = new AssociationRule(associationRule);
 			this.associationRuleSet.add(newAssociationRule);
 		}
+		this.minConfidenceLevel = associationRuleSet.getMinConfidenceLevel();
 	}
 	
 	public void add(AssociationRule associationRule) {

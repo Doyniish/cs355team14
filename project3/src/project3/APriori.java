@@ -17,10 +17,13 @@ public class APriori {
 		Result result = algorithm(filepath, minSupportLevel, minConfidenceLevel);
 		
 		timer.stopTimer();
+		
+		System.out.println(filepath);
 		System.out.println("Timer: " + timer.getTotal() + " ms");
 		System.out.println("Final result set:\n" + result.getAssociationRuleSet());
-//		test1();
 		
+		test1();
+				
 		MySQL mysql = new MySQL();
 		mysql.recreateTables();
 		int ts_id = mysql.saveTransactions(result.getTransactionSet());
@@ -38,7 +41,7 @@ public class APriori {
 		
 		timer.stopTimer();
 		System.out.println("Timer: " + timer.getTotal() + " ms");
-		System.out.println("Final result set:\n" + result);
+		System.out.println("Final result set:\n" + result.getAssociationRuleSet());
 	}
 	
 	public static Result algorithm(String filePath, double minSupportLevel, double minConfidenceLevel) throws IOException {
@@ -384,34 +387,10 @@ public class APriori {
 				}
 			}
 			double confidenceLevel = supportCountXUY / supportCountX;
-//			System.out.println(confidenceLevel);
 			if(confidenceLevel >= minConfidenceLevel) {
 				possibleRuleSets.getRule(i).setConfidenceLevel(confidenceLevel);
 				finalRules.add(possibleRuleSets.getRule(i));
 			}
-			
-			
-			
-//			int supportCountX = 0;	// count of antecedent
-//			int supportCountXUY = 0;	// count of antecedent and consequent
-//			ArrayList<String> itemsX = possibleRuleSets.getRule(i).getAntecedent();
-//			ArrayList<String> itemsY = possibleRuleSets.getRule(i).getConsequent();
-			
-//			for(int j = 0; j < possibleRuleSets.getSize(); j++) {
-//				if(possibleRuleSets.getRule(j).contains(itemsX)) {
-//					++supportCountX;
-//					
-//					if(possibleRuleSets.getRule(j).contains(itemsY)) {	// must contain antecedent to contain antecedent&consequent
-//						++supportCountXUY;
-//					}
-//				}
-//			}
-//			double confidenceLevel = (double) supportCountXUY / (double) supportCountX;
-//			System.out.println(supportCountXUY + " / " + supportCountX + " = " + confidenceLevel);
-//			if(confidenceLevel >= minConfidenceLevel) {
-//				possibleRuleSets.getRule(i).setConfidenceLevel(confidenceLevel);
-//				finalRules.add(possibleRuleSets.getRule(i));
-//			}
 		}
 		return finalRules;
 	}
