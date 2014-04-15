@@ -1,10 +1,14 @@
 package edu.uwec.cs355.group14.tests;
 
+import java.io.IOException;
+
 import project3.APriori;
+import project3.MySQL;
+import project3.Result;
 import project3.Transaction;
 import project3.TransactionSet;
 
-import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
+//import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
 
 import junit.framework.TestCase;
 
@@ -19,6 +23,21 @@ public class APrioriTest extends TestCase {
 	}
 
 	public void testAlgorithm() {
+		APriori apriori = new APriori();
+		String filepath = "sampleTransactionFile";
+		double minSupportLevel = 0.5;
+		double minConfidenceLevel = 0.5;
+		
+				
+		MySQL mysql = new MySQL();
+		mysql.recreateTables();
+	
+		try {
+			assertNotNull(APriori.algorithm(filepath, minSupportLevel, minConfidenceLevel));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 
@@ -65,8 +84,18 @@ public class APrioriTest extends TestCase {
 		TransactionSet filteredSingleItemSets = new TransactionSet(minSupportLevel, minConfidenceLevel);
 		TransactionSet twoItemSets = new TransactionSet(filteredSingleItemSets.getMinSupportLevel(), filteredSingleItemSets.getMinConfidenceLevel());
 		
+		assertTrue(filteredSingleItemSets != twoItemSets);
+	}
+	
+	public void generateCandidates() {
+		double minSupportLevel = 0.25;
+		double minConfidenceLevel = 0.5;
+		int itemsToAdd = 1;
 		
+		TransactionSet multipleItemSets = new TransactionSet(minSupportLevel, minConfidenceLevel);
+		TransactionSet candidates = new TransactionSet(minSupportLevel, multipleItemSets.getMinConfidenceLevel());
 		
+		assertNotNull(candidates);
 	}
 
 	public void testObject() {
