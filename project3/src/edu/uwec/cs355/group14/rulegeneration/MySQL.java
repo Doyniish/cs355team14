@@ -80,13 +80,17 @@ public class MySQL {
 			actions.add(createTableString);
 			
 			try {
-				open();
-				Statement stmt = cn.createStatement();
-				for(String action : actions) {
-					stmt.addBatch(action);
+				String openMsg = open();
+				if(openMsg.equals("")) {
+					Statement stmt = cn.createStatement();
+					for(String action : actions) {
+						stmt.addBatch(action);
+					}
+					stmt.executeBatch();
+					close();
+				} else {
+					System.out.println("Error: " + openMsg);
 				}
-				stmt.executeBatch();
-				close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -103,20 +107,24 @@ public class MySQL {
 						+ "VALUES (" + transactionSet.getMinSupportLevel() + ", " + transactionSet.getMinConfidenceLevel() + ", '" + datetime + "');";
 				
 		try {
-			open();
-			Statement stmt = cn.createStatement();
-			stmt.executeUpdate(sql);
-			ResultSet res = stmt.executeQuery("SELECT ts_id FROM TransactionSet WHERE ts_datetime = '" + datetime + "'");
-			res.next();
-			ts_id = res.getInt(1);
-			
-			for(Transaction transaction : transactionSet.getTransactionSet()) {
-				sql =	"INSERT INTO Transaction (trans_items, ts_id) "
-						+ "VALUES ('" + transaction.getItems() + "', " + ts_id + ");";
-				stmt.addBatch(sql);
+			String openMsg = open();
+			if(openMsg.equals("")) {
+				Statement stmt = cn.createStatement();
+				stmt.executeUpdate(sql);
+				ResultSet res = stmt.executeQuery("SELECT ts_id FROM TransactionSet WHERE ts_datetime = '" + datetime + "'");
+				res.next();
+				ts_id = res.getInt(1);
+				
+				for(Transaction transaction : transactionSet.getTransactionSet()) {
+					sql =	"INSERT INTO Transaction (trans_items, ts_id) "
+							+ "VALUES ('" + transaction.getItems() + "', " + ts_id + ");";
+					stmt.addBatch(sql);
+				}
+				stmt.executeBatch();
+				close();
+			} else {
+				System.out.println("Error: " + openMsg);
 			}
-			stmt.executeBatch();
-			close();
 			
 		} catch (SQLException e) {
 			e.printStackTrace();

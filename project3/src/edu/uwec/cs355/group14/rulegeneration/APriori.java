@@ -11,7 +11,7 @@ public class APriori {
 		Timer timer = new Timer();
 		timer.startTimer();
 		
-		String filepath = "sampleTransactionFile";
+		String filepath = "transactions2.txt";
 		double minSupportLevel = 0.5;
 		double minConfidenceLevel = 0.5;
 		Result result = algorithm(filepath, minSupportLevel, minConfidenceLevel);
@@ -121,7 +121,7 @@ public class APriori {
 			++line;
 			
 			String modifiedLine = currentLine.toLowerCase().replaceAll(" ", "");			
-			if(!modifiedLine.startsWith("{") && modifiedLine.endsWith("}")) {
+			if(!modifiedLine.startsWith("{") || !modifiedLine.endsWith("}")) {
 				errorLog.add("Error: Transaction line does not start with '{' or end with '}' on line " + line + ".");	
 			} else {
 				modifiedLine = modifiedLine.substring(1, modifiedLine.length() - 1);
@@ -130,24 +130,23 @@ public class APriori {
 				Transaction currTransaction = new Transaction();
 				
 				int i = 0;
-				while(i < itemsFromString.length && i < 1001) {
+				while(i < itemsFromString.length) {
 					if(itemsFromString[i].equals("")) {
 						errorLog.add("There are two commas in the transaction file on line " + line + ".");	
 						
 					} else if(currTransaction.contains(itemsFromString[i])) {
 						errorLog.add("The item " + itemsFromString[i] + " was already in the file on line " + line + ".");		
-						
+					} else if(currTransaction.getItems().size() > 1000) {
+						errorLog.add("The transaction contains over 1000 items. Item exceeding limit on line " + line + ": " + itemsFromString[i]);
 					} else if(errorLog.size() == 0) {
 						currTransaction.add(itemsFromString[i]);
 					}
 					
 					i++;
 				}
+				transactionsFromFile.add(currTransaction);
 			}
-			
-			if(currTransaction.size() > 1000) {
-				errorLog.add("The transaction contains over 1000 items.");
-			}
+	
 			
 			
 			currentLine = in.readLine();
