@@ -3,7 +3,7 @@
  *
  * Created on Dec 2, 2003 - Paul J. Wagner
  */
-package project3;
+package edu.uwec.cs.cs355.group14.rulegeneration;
 
 import java.util.Date;
 
