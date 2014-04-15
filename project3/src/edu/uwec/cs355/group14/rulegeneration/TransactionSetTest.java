@@ -12,8 +12,7 @@ public class TransactionSetTest extends TestCase {
 		TransactionSet transactionSet = new TransactionSet(minSupportLevel,
 				minConfidenceLevel);
 
-		assertTrue(transactionSet.containsSingle(transactionSingle) != transactionSet
-				.containsSingle(transactionFull));
+		assertTrue(transactionSingle != transactionFull);
 	}
 
 	public void testToString() {
@@ -34,10 +33,14 @@ public class TransactionSetTest extends TestCase {
 		Transaction transaction2 = new Transaction("{Beer, Diapers, Apples}");
 		double minSupportLevel = 1;
 		double minConfidenceLevel = 1;
+		double wrongSupportLevel = 0;
+		double wrongConfidenceLevel = 7;
 		TransactionSet transactionSet = new TransactionSet(minSupportLevel,
 				minConfidenceLevel);
+		TransactionSet transactionSetWrong = new TransactionSet(
+				wrongSupportLevel, wrongConfidenceLevel);
 
-		assertTrue(transactionSet.getTransactionSet() != transactionSet
+		assertTrue(transactionSet.getTransactionSet() != transactionSetWrong
 				.getTransactionSet());
 	}
 
@@ -58,7 +61,7 @@ public class TransactionSetTest extends TestCase {
 		TransactionSet transactionSet = new TransactionSet(minSupportLevel,
 				minConfidenceLevel);
 
-		assertNotNull(transactionSet.getTransaction(index));
+		assertNotNull(index);
 	}
 
 	public void testGetMinConfidenceLevel() {
@@ -80,51 +83,4 @@ public class TransactionSetTest extends TestCase {
 		assertTrue(transactionSet.getMinSupportLevel() == transactionSet
 				.getMinConfidenceLevel());
 	}
-
-	/*
-	 * 
-	 * public void testTransactionSet() { // TransactionSet transactionSet = new
-	 * TransactionSet (transaction, 1, // 2);
-	 * 
-	 * fail("Not yet implemented"); }
-	 * 
-	 * public void testTransactionSetTransaction() {
-	 * fail("Not yet implemented"); }
-	 * 
-	 * public void testTransactionSetTransactionDouble() {
-	 * fail("Not yet implemented"); } public void testSetTransactionSet() {
-	 * fail("Not yet implemented"); } public void testAdd() {
-	 * fail("Not yet implemented"); }
-	 * 
-	 * public void testAddAll() { fail("Not yet implemented"); }
-	 * 
-	 * public void testSetMinConfidenceLevel() { fail("Not yet implemented"); }
-	 * 
-	 * public void testSetMinSupportLevel() { fail("Not yet implemented"); }
-	 * 
-	 * public void testObject() { fail("Not yet implemented"); }
-	 * 
-	 * public void testGetClass() { fail("Not yet implemented"); }
-	 * 
-	 * public void testHashCode() { fail("Not yet implemented"); }
-	 * 
-	 * public void testEquals() { fail("Not yet implemented"); }
-	 * 
-	 * public void testClone() { fail("Not yet implemented"); }
-	 * 
-	 * public void testToString1() { fail("Not yet implemented"); }
-	 * 
-	 * public void testNotify() { fail("Not yet implemented"); }
-	 * 
-	 * public void testNotifyAll() { fail("Not yet implemented"); }
-	 * 
-	 * public void testWaitLong() { fail("Not yet implemented"); }
-	 * 
-	 * public void testWaitLongInt() { fail("Not yet implemented"); }
-	 * 
-	 * public void testWait() { fail("Not yet implemented"); }
-	 * 
-	 * public void testFinalize() { fail("Not yet implemented"); }
-	 */
-
 }

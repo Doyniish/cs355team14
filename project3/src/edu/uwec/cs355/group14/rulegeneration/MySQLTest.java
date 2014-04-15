@@ -21,8 +21,7 @@ public class MySQLTest extends TestCase {
 				+ "FOREIGN KEY (ts_id) REFERENCES TransactionSet(ts_id)\n"
 				+ ");");
 
-		assertTrue(actions.contains(createTableString) != actions
-				.contains(createTableString2));
+		assertTrue(createTableString != createTableString2);
 	}
 
 	public void testSaveTransactions() {
@@ -46,8 +45,7 @@ public class MySQLTest extends TestCase {
 				+ "');";
 
 		assertNotSame("Two saved transactions are not the same",
-				transactionSet.getTransaction(ts_id),
-				transactionSet.getTransaction(ts_id2));
+				ts_id, ts_id2);
 	}
 
 	public void testSaveRules() {
@@ -59,36 +57,7 @@ public class MySQLTest extends TestCase {
 						+ "VALUES ("
 						+ associationRuleSet.getMinConfidenceLevel() + ", "
 						+ ts_id + ");");
-		assertFalse(associationRuleSet.getRule(ts_id) != associationRuleSet
-				.getRule(rs_id));
+		assertFalse(ts_id != rs_id);
 
 	}
-
-	/*
-	 * 
-	 * public void testObject() { fail("Not yet implemented"); }
-	 * 
-	 * public void testGetClass() { fail("Not yet implemented"); }
-	 * 
-	 * public void testHashCode() { fail("Not yet implemented"); }
-	 * 
-	 * public void testEquals() { fail("Not yet implemented"); }
-	 * 
-	 * public void testClone() { fail("Not yet implemented"); }
-	 * 
-	 * public void testToString() { fail("Not yet implemented"); }
-	 * 
-	 * public void testNotify() { fail("Not yet implemented"); }
-	 * 
-	 * public void testNotifyAll() { fail("Not yet implemented"); }
-	 * 
-	 * public void testWaitLong() { fail("Not yet implemented"); }
-	 * 
-	 * public void testWaitLongInt() { fail("Not yet implemented"); }
-	 * 
-	 * public void testWait() { fail("Not yet implemented"); }
-	 * 
-	 * public void testFinalize() { fail("Not yet implemented"); }
-	 */
-
 }
