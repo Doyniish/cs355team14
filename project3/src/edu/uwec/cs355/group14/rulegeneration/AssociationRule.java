@@ -1,4 +1,4 @@
-package project3;
+package edu.uwec.cs355.group14.rulegeneration;
 
 import java.util.ArrayList;
 import static java.lang.Double.valueOf;
