@@ -17,8 +17,6 @@ public class AssociationRule {
 	}
 	
 	public AssociationRule(AssociationRule ar) {
-		this.antecedent = ar.antecedent;
-		this.consequent = ar.consequent;
 		this.confidenceLevel = ar.confidenceLevel;
 		this.antecedent = new ArrayList<String>();
 		for(String antecedent : ar.getAntecedent()) {
@@ -41,8 +39,6 @@ public class AssociationRule {
 	public boolean contains(ArrayList<String> items) {
 		return this.getAntecedent().containsAll(items) || this.getConsequent().containsAll(items);
 	}
-	
-	
 	
 	public ArrayList<String> getAntecedent() {
 		return antecedent;

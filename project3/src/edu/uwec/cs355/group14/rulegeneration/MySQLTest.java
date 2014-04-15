@@ -28,8 +28,7 @@ public class MySQLTest extends TestCase {
 		Transaction transaction = new Transaction("{Apples, Beer, Diapers}");
 		double minSupportLevel = 0.5;
 		double minConfidenceLevel = 0.5;
-		TransactionSet transactionSet = new TransactionSet(transaction,
-				minSupportLevel, minConfidenceLevel);
+		TransactionSet transactionSet = new TransactionSet(transaction, minSupportLevel, minConfidenceLevel);
 		SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 		Calendar calendar = new GregorianCalendar();
 		String datetime = sdf.format(calendar.getTime());

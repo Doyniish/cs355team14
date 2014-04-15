@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class TransactionSet {
-	private ArrayList<Transaction> transactionSet = new ArrayList<Transaction>();;
+	private ArrayList<Transaction> transactionSet = new ArrayList<Transaction>();
 	private double minSupportLevel = 0;
 	private double minConfidenceLevel = 0;
 	
@@ -28,11 +28,11 @@ public class TransactionSet {
 	}
 	
 	public TransactionSet(TransactionSet transactionSet) {	// copy constructor
-//		this.transactionSet = new ArrayList<Transaction>();
-//		for(Transaction transaction : transactionSet.getTransactionSet()) {
-//			Transaction newTransaction = new Transaction(transaction);
-//			this.transactionSet.add(newTransaction);
-//		}
+		this.transactionSet = new ArrayList<Transaction>();
+		for(Transaction transaction : transactionSet.getTransactionSet()) {
+			Transaction newTransaction = new Transaction(transaction);
+			this.transactionSet.add(newTransaction);
+		}
 		this.transactionSet = transactionSet.getTransactionSet();
 		this.minConfidenceLevel = transactionSet.getMinConfidenceLevel();
 		this.minSupportLevel = transactionSet.getMinSupportLevel();
