@@ -11,7 +11,7 @@ public class APriori {
 		Timer timer = new Timer();
 		timer.startTimer();
 		
-		String filepath = "transactions2.txt";
+		String filepath = "transactions1";
 		double minSupportLevel = 0.5;
 		double minConfidenceLevel = 0.5;
 		Result result = algorithm(filepath, minSupportLevel, minConfidenceLevel);
@@ -21,27 +21,10 @@ public class APriori {
 		System.out.println(filepath);
 		System.out.println("Timer: " + timer.getTotal() + " ms");
 		System.out.println("Final result set:\n" + result.getAssociationRuleSet());
-		
-		test1();
-				
+						
 		MySQL mysql = new MySQL();
 		mysql.recreateTables();
-		int ts_id = mysql.saveTransactions(result.getTransactionSet());
-		mysql.saveRules(result.getAssociationRuleSet(), ts_id);
-	}
-	
-	public static void test1() throws IOException {
-		Timer timer = new Timer();
-		timer.startTimer();
-		
-		String filepath = "transactions1";
-		double minSupportLevel = 0.25;
-		double minConfidenceLevel = 0.5;
-		Result result = algorithm(filepath, minSupportLevel, minConfidenceLevel);
-		
-		timer.stopTimer();
-		System.out.println("Timer: " + timer.getTotal() + " ms");
-		System.out.println("Final result set:\n" + result.getAssociationRuleSet());
+		mysql.saveData(result.getTransactionSet(), result.getAssociationRuleSet());
 	}
 	
 	public static Result algorithm(String filePath, double minSupportLevel, double minConfidenceLevel) throws IOException {

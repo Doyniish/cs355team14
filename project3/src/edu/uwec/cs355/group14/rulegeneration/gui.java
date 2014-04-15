@@ -31,7 +31,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 
 public class gui extends JFrame{
-	
+	private double minConfidenceLevel;
+	private double minSupportLevel;
+	private String filepath;
 	
 	private JPanel panel;
 	private JTextArea result;
@@ -64,7 +66,7 @@ public class gui extends JFrame{
 		   		public void actionPerformed(ActionEvent ae)
 		   		{
 		   			final String MinConfLvl = mcltxt.getText();
-		   			double minConfidenceLevel = Double.parseDouble(MinConfLvl);
+		   			minConfidenceLevel = Double.parseDouble(MinConfLvl);
 		   			System.out.println(minConfidenceLevel);
 	   			}
 			});
@@ -83,7 +85,7 @@ public class gui extends JFrame{
 	   		public void actionPerformed(ActionEvent ae)
 	   		{
 	   			final String MinSupLvl = msltxt.getText();
-	   			double minSupportLevel = Double.parseDouble(MinSupLvl);
+	   			minSupportLevel = Double.parseDouble(MinSupLvl);
 	   			System.out.println(minSupportLevel);
    			}
 		});
@@ -96,18 +98,25 @@ public class gui extends JFrame{
 		filenamer.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent event) {
-            	final String filepath = filetxt.getText();
+            	filepath = filetxt.getText();
 	   			System.out.println(filepath);
             }
         });
-		
-		
 		
 		JButton run = new JButton("Submit Information");
 		run.setBounds(20,140, 240, 25);
 		run.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-	           APriori.algorithm(filepath, minConfidenceLevel, minSupportLevel);//variables need to be returned outside of local scope?
+	           try {
+				Result result = APriori.algorithm(filepath, minConfidenceLevel, minSupportLevel);
+				if(result.getErrorLog() != null) {
+					// display transaction
+				} else {
+					// display error log
+				}
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}//variables need to be returned outside of local scope?
 	            System.out.println("data sent to algorithm");
 	      //      try (FileReader fr = new FileReader(APriori.algorithm(result))){;
 	       //     		result.read(fr, null);
@@ -124,12 +133,7 @@ public class gui extends JFrame{
 
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         panel.add(pane);
-        add(panel);
-	
-        
-        
-        
-		
+        add(panel);	
 
 		add(mcl);
 		add(mcltxt);
@@ -183,6 +187,3 @@ public class gui extends JFrame{
 		});
 		
 	}}
-	
-	
-	
