@@ -6,8 +6,6 @@ package gui_rough_draft;
  * and open the template in the editor.
  */
 
-package gui_rough_draft;
-
 /**
  *
  * @author johnskie
@@ -178,11 +176,6 @@ public class gui extends javax.swing.JFrame {
 
         public jFormattedTextField2() {
         }
-    }
-
-    
-        
-        
     }                                        
 
     /**

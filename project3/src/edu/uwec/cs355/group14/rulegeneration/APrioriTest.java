@@ -1,15 +1,6 @@
-package edu.uwec.cs355.group14.tests;
+package edu.uwec.cs355.group14.rulegeneration;
 
 import java.io.IOException;
-
-import project3.APriori;
-import project3.MySQL;
-import project3.Result;
-import project3.Transaction;
-import project3.TransactionSet;
-
-//import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
-
 import junit.framework.TestCase;
 
 public class APrioriTest extends TestCase {

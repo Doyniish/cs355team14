@@ -1,8 +1,6 @@
-package edu.uwec.cs355.group14.tests;
+package edu.uwec.cs355.group14.rulegeneration;
 
 import java.util.ArrayList;
-
-import project3.AssociationRule;
 import junit.framework.TestCase;
 
 public class AssociationRuleTest extends TestCase {

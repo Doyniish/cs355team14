@@ -1,21 +1,5 @@
-package edu.uwec.cs355.group14.tests;
+package edu.uwec.cs355.group14.rulegeneration;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-import edu.uwec.cs355.group14.rulegeneration.*;
-=======
-<<<<<<< HEAD
-=======
->>>>>>> 9d3885b106cf5af43f532174a3c7f162b9cf16a8
-import edu.uwec.cs.cs355.group14.rulegeneration.TransactionSet;
-=======
-import project3.Transaction;
-import project3.TransactionSet;
->>>>>>> 7cf677f51313ca889a1220102f27179ca17e3be2
-<<<<<<< HEAD
->>>>>>> 9d3885b106cf5af43f532174a3c7f162b9cf16a8
-=======
->>>>>>> 9d3885b106cf5af43f532174a3c7f162b9cf16a8
 import junit.framework.TestCase;
 
 public class TransactionSetTest extends TestCase {
