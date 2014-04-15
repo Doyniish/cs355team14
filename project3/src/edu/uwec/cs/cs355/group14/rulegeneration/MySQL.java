@@ -1,4 +1,4 @@
-package project3;
+package edu.uwec.cs.cs355.group14.rulegeneration;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

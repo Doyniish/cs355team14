@@ -1,7 +1,6 @@
 package edu.uwec.cs355.group14.tests;
 
-import project3.Transaction;
-import project3.TransactionSet;
+import edu.uwec.cs355.group14.rulegeneration.*;
 import junit.framework.TestCase;
 
 public class TransactionSetTest extends TestCase {
