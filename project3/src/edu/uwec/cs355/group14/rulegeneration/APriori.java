@@ -116,9 +116,40 @@ public class APriori {
 			}
 			currentLine = in.readLine();
 		}
-
+		int line = 3;
 		while(currentLine != null) {
-			transactionsFromFile.add(new Transaction(currentLine));
+			++line;
+			
+			String modifiedLine = currentLine.toLowerCase().replaceAll(" ", "");			
+			if(!modifiedLine.startsWith("{") && modifiedLine.endsWith("}")) {
+				errorLog.add("Error: Transaction line does not start with '{' or end with '}' on line " + line + ".");	
+			} else {
+				modifiedLine = modifiedLine.substring(1, modifiedLine.length() - 1);
+				String[] itemsFromString = modifiedLine.split(",");
+				
+				Transaction currTransaction = new Transaction();
+				
+				int i = 0;
+				while(i < itemsFromString.length && i < 1001) {
+					if(itemsFromString[i].equals("")) {
+						errorLog.add("There are two commas in the transaction file on line " + line + ".");	
+						
+					} else if(currTransaction.contains(itemsFromString[i])) {
+						errorLog.add("The item " + itemsFromString[i] + " was already in the file on line " + line + ".");		
+						
+					} else if(errorLog.size() == 0) {
+						currTransaction.add(itemsFromString[i]);
+					}
+					
+					i++;
+				}
+			}
+			
+			if(currTransaction.size() > 1000) {
+				errorLog.add("The transaction contains over 1000 items.");
+			}
+			
+			
 			currentLine = in.readLine();
 		}
 		
