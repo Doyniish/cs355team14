@@ -107,9 +107,12 @@ public class gui extends JFrame{
 		run.setBounds(20,140, 240, 25);
 		run.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-	           // Apriori.algorithm(filepath, minConfidenceLevel, minSupportLevel);
+	           APriori.algorithm(filepath, minConfidenceLevel, minSupportLevel);//variables need to be returned outside of local scope?
 	            System.out.println("data sent to algorithm");
-			
+	      //      try (FileReader fr = new FileReader(APriori.algorithm(result))){;
+	       //     		result.read(fr, null);
+	      //      } //this comment block is attempting to read in the result file from 
+	            //the apriori algorithm and display it to the result textarea on button click.
 			
 		}
 	});
