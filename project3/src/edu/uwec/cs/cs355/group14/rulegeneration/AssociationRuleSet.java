@@ -1,3 +1,4 @@
+<<<<<<< HEAD:project3/src/edu/uwec/cs/cs355/group14/rulegeneration/AssociationRuleSet.java
 package edu.uwec.cs.cs355.group14.rulegeneration;
 
 import java.util.ArrayList;
@@ -11,6 +12,47 @@ public class AssociationRuleSet {
 		associationRuleSet = new ArrayList<AssociationRule>();
 		this.setMinConfidenceLevel(0);
 	}
+=======
+package edu.uwec.cs.cs355.group14.rulegeneration;
+
+import java.util.ArrayList;
+import java.util.Collections;
+
+public class AssociationRuleSet {
+	private ArrayList<AssociationRule> associationRuleSet;
+	private double minConfidenceLevel;
+
+	public AssociationRuleSet() {
+		associationRuleSet = new ArrayList<AssociationRule>();
+		this.setMinConfidenceLevel(0);
+	}
+	
+	public AssociationRuleSet(double minConfidenceLevel) {
+		associationRuleSet = new ArrayList<AssociationRule>();
+		this.setMinConfidenceLevel(minConfidenceLevel);
+	}
+	
+	public AssociationRuleSet(AssociationRuleSet associationRuleSet) {	// copy constructor
+		this.associationRuleSet = new ArrayList<AssociationRule>();
+		for(AssociationRule associationRule : associationRuleSet.getRules()) {
+			AssociationRule newAssociationRule = new AssociationRule(associationRule);
+			this.associationRuleSet.add(newAssociationRule);
+		}
+		this.minConfidenceLevel = associationRuleSet.getMinConfidenceLevel();
+	}
+	
+	public void add(AssociationRule associationRule) {
+		associationRuleSet.add(associationRule);
+	}
+	
+	public void addAll(AssociationRuleSet ars) {
+		associationRuleSet.addAll(ars.associationRuleSet);
+	}
+	
+	public AssociationRule getRule(int i) {
+		return associationRuleSet.get(i);
+	}
+>>>>>>> 9d3885b106cf5af43f532174a3c7f162b9cf16a8:project3/src/edu/uwec/cs/cs355/group14/rulegeneration/AssociationRuleSet.java
 	
 	public AssociationRuleSet(double minConfidenceLevel) {
 		associationRuleSet = new ArrayList<AssociationRule>();
