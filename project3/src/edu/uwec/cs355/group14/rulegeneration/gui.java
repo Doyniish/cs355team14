@@ -60,7 +60,7 @@ public class gui extends JFrame{
 	}
 	
 	private JPanel panel;
-	private JTextArea result;
+	private JTextArea display;
 	
 	
 	public gui() {
@@ -135,10 +135,11 @@ public class gui extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 	           try {
 				Result result = APriori.algorithm(filepath, minConfidenceLevel, minSupportLevel);
-				if(result.getErrorLog() != null) {
+				if(result.getErrorLog() == null) {
 					// display transaction
+					display.setText(result.getAssociationRuleSet().toString());
 				} else {
-					// display error log
+					display.setText(result.getErrorLog().toString());
 				}
 			} catch (IOException e1) {
 				e1.printStackTrace();
@@ -151,11 +152,12 @@ public class gui extends JFrame{
 
 		}
 	});
-		JTextArea result = new JTextArea();
-		result.setBounds(10,200 ,570 , 350);
-		result.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		JTextArea display = new JTextArea();
+		display.setBounds(10,200 ,570 , 350);
+		display.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		JScrollPane pane = new JScrollPane();
-        pane.getViewport().add(result);
+        pane.getViewport().add(display);
+       
 
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         panel.add(pane);
@@ -168,7 +170,7 @@ public class gui extends JFrame{
         add(filenamer);
         add(filetxt);
         add(run);
-		add(result);
+		add(display);
 
        add(panel);
 
