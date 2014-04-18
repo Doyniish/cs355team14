@@ -33,6 +33,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class gui extends JFrame{
 	private double minConfidenceLevel;
 	private double minSupportLevel;
+	private String filepath;
+
 	public double getMinConfidenceLevel() {
 		return minConfidenceLevel;
 	}
@@ -56,7 +58,7 @@ public class gui extends JFrame{
 	public void setFilepath(String filepath) {
 		this.filepath = filepath;
 	}
-	private String filepath;
+	
 	private JPanel panel;
 	private JTextArea result;
 	
@@ -126,7 +128,6 @@ public class gui extends JFrame{
 	   			System.out.println(filepath);
             }
         });
-		
 		
 		JButton run = new JButton("Submit Information");
 		run.setBounds(20,140, 240, 25);
