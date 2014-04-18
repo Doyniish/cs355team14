@@ -33,14 +33,34 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class gui extends JFrame{
 	private double minConfidenceLevel;
 	private double minSupportLevel;
-	private String filepath;
-<<<<<<< HEAD
+	public double getMinConfidenceLevel() {
+		return minConfidenceLevel;
+	}
 
-=======
-	
->>>>>>> 95fc4c430f18d0317a788a0c84ce06e611059184
+	public void setMinConfidenceLevel(double minConfidenceLevel) {
+		this.minConfidenceLevel = minConfidenceLevel;
+	}
+
+	public double getMinSupportLevel() {
+		return minSupportLevel;
+	}
+
+	public void setMinSupportLevel(double minSupportLevel) {
+		this.minSupportLevel = minSupportLevel;
+	}
+
+	public String getFilepath() {
+		return filepath;
+	}
+
+	public void setFilepath(String filepath) {
+		this.filepath = filepath;
+	}
+	private String filepath;
 	private JPanel panel;
 	private JTextArea result;
+	
+	
 	public gui() {
 
 		initUI();
@@ -106,11 +126,8 @@ public class gui extends JFrame{
 	   			System.out.println(filepath);
             }
         });
-<<<<<<< HEAD
-
-=======
 		
->>>>>>> 95fc4c430f18d0317a788a0c84ce06e611059184
+		
 		JButton run = new JButton("Submit Information");
 		run.setBounds(20,140, 240, 25);
 		run.addActionListener(new ActionListener() {
@@ -124,7 +141,7 @@ public class gui extends JFrame{
 				}
 			} catch (IOException e1) {
 				e1.printStackTrace();
-			}//variables need to be returned outside of local scope?
+			}
 	            System.out.println("data sent to algorithm");
 	      //      try (FileReader fr = new FileReader(APriori.algorithm(result))){;
 	       //     		result.read(fr, null);
@@ -193,10 +210,10 @@ public class gui extends JFrame{
 			}
 
 		});
-<<<<<<< HEAD
 
-	}}
-=======
+
+	}
+
 		
-	}}
->>>>>>> 95fc4c430f18d0317a788a0c84ce06e611059184
+	}
+
