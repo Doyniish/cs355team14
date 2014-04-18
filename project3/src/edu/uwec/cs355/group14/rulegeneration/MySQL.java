@@ -96,6 +96,11 @@ public class MySQL {
 			}
 	}
 	
+	public void saveData(TransactionSet transactionSet, AssociationRuleSet ruleSets) {
+		int ts_id = saveTransactions(transactionSet);
+		saveRules(ruleSets, ts_id);
+	}
+	
 	public int saveTransactions(TransactionSet transactionSet) {
 		SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 		Calendar calendar = new GregorianCalendar();
