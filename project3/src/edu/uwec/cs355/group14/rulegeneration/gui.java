@@ -11,10 +11,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import java.awt.BorderLayout;
-
-import javax.swing.ImageIcon;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -64,13 +60,15 @@ public class gui extends JFrame{
 	
 	
 	public gui() {
-
+		minConfidenceLevel = 0.0;
+		minSupportLevel = 0.0;
+		filepath = "";
 		initUI();
+		
 
 	}
 
 	public final void initUI(){
-
 		panel = new JPanel();
 		setTitle("Apriori");
 		setSize (600,600);
@@ -78,24 +76,18 @@ public class gui extends JFrame{
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-
-
-
-
 		final JTextField mcltxt = new JTextField();
 		mcltxt.setBounds(150, 30, 60, 25);
 		JButton mcl = new JButton("Set MCL");
 		mcl.setBounds(20, 30, 120, 25);
 
-		mcl.addActionListener(new ActionListener()
-		   {
-		   		public void actionPerformed(ActionEvent ae)
-		   		{
-		   			final String MinConfLvl = mcltxt.getText();
-		   			minConfidenceLevel = Double.parseDouble(MinConfLvl);
-		   			System.out.println(minConfidenceLevel);
-	   			}
-			});
+		mcl.addActionListener(new ActionListener() {
+		   	public void actionPerformed(ActionEvent ae) {
+		   		final String MinConfLvl = mcltxt.getText();
+		   		minConfidenceLevel = Double.parseDouble(MinConfLvl);
+		   		System.out.println(minConfidenceLevel);
+	   		}
+		});
 
 
 
