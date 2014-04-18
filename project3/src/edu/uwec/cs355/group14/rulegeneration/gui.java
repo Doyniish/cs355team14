@@ -31,9 +31,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 
 public class gui extends JFrame{
-	private double minConfidenceLevel;
-	private double minSupportLevel;
-	private String filepath;
+	public double minConfidenceLevel;
+	public double minSupportLevel;
+	public String filepath;
 
 	public double getMinConfidenceLevel() {
 		return minConfidenceLevel;
@@ -59,8 +59,8 @@ public class gui extends JFrame{
 		this.filepath = filepath;
 	}
 	
-	private JPanel panel;
-	private JTextArea display;
+	public JPanel panel;
+	public JTextArea display;
 	
 	
 	public gui() {
@@ -202,7 +202,7 @@ public class gui extends JFrame{
         }
         return fileString;
     }
-	public static void main (String[] args){
+	public  void main (String[] args){ //static?
 
 		SwingUtilities.invokeLater(new Runnable(){
 			@Override
