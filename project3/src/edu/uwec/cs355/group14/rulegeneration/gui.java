@@ -194,8 +194,7 @@ public class gui extends JFrame{
         }
         return fileString;
     }
-	public  void main (String[] args){ //static?
-
+	public static void main (String[] args){
 		SwingUtilities.invokeLater(new Runnable(){
 			@Override
 			public void run() {
