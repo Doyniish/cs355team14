@@ -34,11 +34,7 @@ public class gui extends JFrame{
 	private double minConfidenceLevel;
 	private double minSupportLevel;
 	private String filepath;
-<<<<<<< HEAD
 
-=======
-	
->>>>>>> 95fc4c430f18d0317a788a0c84ce06e611059184
 	private JPanel panel;
 	private JTextArea result;
 	public gui() {
@@ -106,11 +102,7 @@ public class gui extends JFrame{
 	   			System.out.println(filepath);
             }
         });
-<<<<<<< HEAD
 
-=======
-		
->>>>>>> 95fc4c430f18d0317a788a0c84ce06e611059184
 		JButton run = new JButton("Submit Information");
 		run.setBounds(20,140, 240, 25);
 		run.addActionListener(new ActionListener() {
