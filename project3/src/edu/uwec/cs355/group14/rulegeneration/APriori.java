@@ -1,17 +1,36 @@
 package edu.uwec.cs355.group14.rulegeneration;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class APriori {
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
+		test1();
+//		System.out.println("error");			// does not exist
+//		readFromFile("error.txt", 0.5, 0.5);
+//		System.out.println("errors");			// empty
+//		readFromFile("errors.txt", 0.5, 0.5);	// only vendor and start
+//		System.out.println("errors2");
+//		readFromFile("errors2.txt", 0.5, 0.5);
+//		System.out.println("errors3");			// no vendor
+//		readFromFile("errors3.txt", 0.5, 0.5);
+//		System.out.println("errors4");			// no vendor
+//		readFromFile("errors4.txt", 0.5, 0.5);
+//		System.out.println("test/transactions1.txt");			// no vendor
+//		readFromFile("test/transactions1.txt", 0.5, 0.5);
+	}
+	
+	public static void test1() {
 		Timer timer = new Timer();
 		timer.startTimer();
 		
-		String filepath = "transactions1";
+		String filepath = "test/transactions1.txt";
 		double minSupportLevel = 0.5;
 		double minConfidenceLevel = 0.5;
 		Result result = algorithm(filepath, minSupportLevel, minConfidenceLevel);
@@ -21,13 +40,9 @@ public class APriori {
 		System.out.println(filepath);
 		System.out.println("Timer: " + timer.getTotal() + " ms");
 		System.out.println("Final result set:\n" + result.getAssociationRuleSet());
-						
-		MySQL mysql = new MySQL();
-		mysql.recreateTables();
-		mysql.saveData(result.getTransactionSet(), result.getAssociationRuleSet());
 	}
 	
-	public static Result algorithm(String filePath, double minSupportLevel, double minConfidenceLevel) throws IOException {
+	public static Result algorithm(String filePath, double minSupportLevel, double minConfidenceLevel) {
 		Result result = new Result();
 		/* Frequent item sets generation */
 		TransactionSet transactionResults = new TransactionSet(minSupportLevel, minConfidenceLevel);
@@ -73,71 +88,146 @@ public class APriori {
 
 			result.setAssociationRuleSet(ruleSets);
 			
-		} else {
-			// error log
 		}
 		
 		return result;
 	}
 
-	private static Result readFromFile(String filepath, double minSupportLevel, double minConfidenceLevel) throws IOException {
-		ArrayList<String> errorLog = new ArrayList<String>();
+	private static Result readFromFile(String filepath, double minSupportLevel, double minConfidenceLevel) {
 		Result result = new Result();
+		ArrayList<String> errorLog = new ArrayList<String>();
 		
 		TransactionSet transactionsFromFile = new TransactionSet(minSupportLevel, minConfidenceLevel);
-		BufferedReader in = new BufferedReader(new FileReader(filepath));
-		String currentLine = in.readLine();
+		BufferedReader in;
 		
-		if(!currentLine.equals("PaulMart")) {		// check for vendor
-			errorLog.add("Error: The transaction set does not contain the vendor information on line 1.");
-		}
-		currentLine = in.readLine();
-		
-		for(int i = 0; i < 2; i++) {
-			if(isValidDate(currentLine)) {
-				errorLog.add("Error: The transacion set does not contain a valid date on line " + (i+2) + ".");
-			}
-			currentLine = in.readLine();
-		}
-		int line = 3;
-		while(currentLine != null) {
-			++line;
+		try {
+			int line = 1;
+			in = new BufferedReader(new FileReader(filepath));
+			String currentLine = in.readLine();
 			
-			String modifiedLine = currentLine.toLowerCase().replaceAll(" ", "");			
-			if(!modifiedLine.startsWith("{") || !modifiedLine.endsWith("}")) {
-				errorLog.add("Error: Transaction line does not start with '{' or end with '}' on line " + line + ".");	
+			// skips through blank lines that may be beginning of file
+			while(currentLine != null && currentLine.equals("")) {
+				currentLine = in.readLine();
+				++line;
+			}
+			
+			if(currentLine == null) {
+				errorLog.add("ERROR: The transaction file is completely empty.");
 			} else {
-				modifiedLine = modifiedLine.substring(1, modifiedLine.length() - 1);
-				String[] itemsFromString = modifiedLine.split(",");
-				
-				Transaction currTransaction = new Transaction();
-				
-				int i = 0;
-				while(i < itemsFromString.length) {
-					if(itemsFromString[i].equals("")) {
-						errorLog.add("There are two commas in the transaction file on line " + line + ".");	
-						
-					} else if(currTransaction.contains(itemsFromString[i])) {
-						errorLog.add("The item " + itemsFromString[i] + " was already in the file on line " + line + ".");		
-					} else if(currTransaction.getItems().size() > 1000) {
-						errorLog.add("The transaction contains over 1000 items. Item exceeding limit on line " + line + ": " + itemsFromString[i]);
-					} else if(errorLog.size() == 0) {
-						currTransaction.add(itemsFromString[i]);
-					}
+				if(!currentLine.equals("PaulMart")) {		// check for vendor
+					errorLog.add("Line " + line + ": The transaction set does not contain the vendor information.");
 					
-					i++;
+					if(!isValidDate(currentLine)) {
+						currentLine = in.readLine();
+						++line;
+					}
+				} else {
+					currentLine = in.readLine();
+					++line;
 				}
-				transactionsFromFile.add(currTransaction);
-			}
+				
+				// skips through blank lines to dates
+				while(currentLine != null && currentLine.equals("")) {
+					currentLine = in.readLine();
+					++line;
+				}
+				
+				String startDate = "00-00-00";
+				String endDate = "00-00-00";
+				String defaultTime = "12:00:00";
+
+				if(!isValidDate(currentLine)) {
+					errorLog.add("Line " + line + ": The transacion set does not contain a valid starting date (YYYY-MM-DD).");
+				} else {
+					startDate = currentLine;
+					++line;
+					currentLine = in.readLine();
+					// skips through blank lines to end date
+					while(currentLine != null && currentLine.equals("")) {
+						currentLine = in.readLine();
+						++line;
+					}
+				}
+				
+				if(!isValidDate(currentLine)) {
+					errorLog.add("Line " + line + ": The transacion set does not contain a valid ending date (YYYY-MM-DD).");
+				} else {
+					endDate = currentLine;
+					++line;
+					currentLine = in.readLine();
+				}
+				
+				// skips through blank lines to get transactions
+				while(currentLine != null && currentLine.equals("")) {
+					currentLine = in.readLine();
+					++line;
+				}
+			
+				while(currentLine != null) {
+					if(currentLine.equals("")) {
+						currentLine = in.readLine();
+						++line;
+					} else {
+						String date = startDate;
+						String time = defaultTime;
+						String modifiedLine = currentLine.toLowerCase().replaceAll(" ", "");	// lower case ??!
+						
+						if(!modifiedLine.startsWith("{")) {
+							errorLog.add("Line " + line + ": Transaction line does not start with '{'.");
+						} else {
+							modifiedLine = modifiedLine.substring(1, modifiedLine.length());
+							if(!modifiedLine.endsWith("}")) {
+								String possibleDateTime = modifiedLine.replaceAll(".*}(\\d)", "$1");
 	
-			
-			
-			currentLine = in.readLine();
+								if(possibleDateTime.length() > 9 && isValidDate(possibleDateTime.substring(0,10))) {
+									date = possibleDateTime.substring(0,9);
+									
+									if(possibleDateTime.length() > 8 && isValidTime(possibleDateTime.substring(10))) {
+										time = possibleDateTime.substring(10);
+										modifiedLine = modifiedLine.substring(0, modifiedLine.length() - 20);
+									}
+								} else {
+									errorLog.add("Line " + line + ": Transaction line does not start with '}'.");
+								}
+							} else {
+								modifiedLine = modifiedLine.substring(0, modifiedLine.length() - 1);
+							}
+							
+							String[] itemsFromString = modifiedLine.split(",");
+							ArrayList<String> itemsInTransaction = new ArrayList<String>();
+
+							int i = 0;
+							while(i < itemsFromString.length) {
+								if(itemsFromString[i].equals("")) {
+									errorLog.add("Line " + line + ": There are two consecutive commas in the transaction file.");	
+								} else if(itemsInTransaction.contains(itemsFromString[i])) {
+									errorLog.add("Line " + line + ": The item " + itemsFromString[i] + " was already listed in the transaction.");		
+								} else if(itemsInTransaction.size() > 1000) {
+									errorLog.add("Line " + line + ": The transaction contains over 1000 items. (item: " + itemsFromString[i] + ")");
+								}
+								itemsInTransaction.add(itemsFromString[i]);
+								++i;
+							}
+							Transaction currTransaction = new Transaction(itemsInTransaction, time, date);
+							transactionsFromFile.add(currTransaction);
+						}
+						++line;
+						currentLine = in.readLine();
+					}
+				}
+				in.close();
+				result.setTransactionSet(transactionsFromFile);
+			}
+		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+			errorLog.add("ERROR: The file (" + filepath + ") does not exist.");
+		} catch (IOException e) {
+				e.printStackTrace();
 		}
-		
-		in.close();
-		
-		result.setTransactionSet(transactionsFromFile);
+		if(errorLog.size() > 0) {
+			result.setErrorLog(errorLog);
+			System.out.println(result.printErrorLog());
+		}
 		return result;
 	}
 	
@@ -145,7 +235,7 @@ public class APriori {
 	    if (dateString == null || dateString.length() != "yyyy-MM-dd".length()) {
 	        return false;
 	    }
-
+	    dateString = dateString.substring(0,4) + dateString.substring(5,7) + dateString.substring(8, 10);
 	    int date;
 	    try {
 	        date = Integer.parseInt(dateString);
@@ -164,6 +254,30 @@ public class APriori {
 
 	    return (yearOk && monthOk && dayOk);
 	}
+	
+	public static boolean isValidTime(String timeString) {
+	    if (timeString == null || timeString.length() != "hh-mm-ss".length()) {
+	        return false;
+	    }
+	    timeString = timeString.substring(0,2) + timeString.substring(3,5) + timeString.substring(6, 8);
+	    int time;
+	    try {
+	        time = Integer.parseInt(timeString);
+	    } catch (NumberFormatException e) {
+	        return false;
+	    }
+
+	    int hours = time / 10000;
+	    int minutes = (time % 10000) / 100;
+	    int seconds = time % 100;
+
+	    boolean hoursOk = (hours >= 0) && (hours <= 24);
+	    boolean minutesOk = (minutes >= 0) && (minutes < 60);
+	    boolean secondsOk = (seconds >= 0) && (seconds < 60);
+
+	    return (hoursOk && minutesOk && secondsOk);
+	}
+	
 
 	private static int daysInMonth(int year, int month) {
 	    int daysInMonth;
@@ -230,6 +344,7 @@ public class APriori {
 		}
 		return twoItemSets;
 	}
+	
 	
 	private static TransactionSet generateCandidates(TransactionSet multipleItemSets, double minSupportLevel, int itemsToAdd) {
 		Transaction uniqueItems = generateUniqueItems(multipleItemSets, minSupportLevel);

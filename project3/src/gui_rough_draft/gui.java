@@ -73,10 +73,9 @@ public class gui extends JFrame {
 		   			} else {
 		   				display.setText(result.getErrorLog().toString());
 		   			}
-				} catch (IOException e1) {
-					e1.printStackTrace();
+				} finally {
+					System.out.println("run completed");
 				}
-				System.out.println("run completed");
 			}
 		});
 		add(run);

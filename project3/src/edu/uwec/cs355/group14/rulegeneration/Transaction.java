@@ -7,6 +7,8 @@ public class Transaction {
 	private double minSupportLevel;
 	private double actualSupportLevel;
 	private int count;
+	private String date;
+	private String time;
 	
 	/*		Constructors	*/
 	public Transaction() {													// no parameters
@@ -29,6 +31,14 @@ public class Transaction {
 		if(!transactionLine.equals("")) {
 			this.addItems(transactionLine);
 		}
+	}
+	
+	public Transaction(ArrayList<String> transactionLine, String date, String time) {
+		this.items = new ArrayList<String>();
+		this.count = 0;
+		this.minSupportLevel = 0;
+		this.actualSupportLevel = 0;
+		this.items = transactionLine;
 	}
 	
 	public Transaction(Transaction ts) {									// copy constructor
@@ -104,7 +114,7 @@ public class Transaction {
 	
 	/* Getters and Setters, etc.	*/
 	public ArrayList<String> getItems() {
-		return this.items; 
+		return this.items;
 	}
 	
 	public void setItems(ArrayList<String> items) {
@@ -165,5 +175,21 @@ public class Transaction {
 
 	public void setActualSupportLevel(double actualSupportLevel) {
 		this.actualSupportLevel = actualSupportLevel;
+	}
+
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+	public String getTime() {
+		return time;
+	}
+
+	public void setTime(String time) {
+		this.time = time;
 	}
 }

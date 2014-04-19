@@ -69,24 +69,24 @@ public class AssociationRule {
 	}
 	
 	public void setConfidenceLevel(double confidenceLevel) {
-		this.confidenceLevel = valueOf(format(US, "%1$.5f", confidenceLevel));
+		this.confidenceLevel = valueOf(format(US, "%1$.4f", confidenceLevel));
 	}
 	
 	@Override
 	public String toString() {
-		String string = "IF ";
+		String string = "If ";
 		for(int i = 0; i < antecedent.size(); i++) {
 			string = string + antecedent.get(i);
 			if(i == antecedent.size()-1) {
-				string = string + " THEN ";
+				string = string + " Then ";
 			} else {
-				string = string + ", ";
+				string = string + " and ";
 			}
 		}
 		for(int i = 0; i < consequent.size(); i++) {
 			string = string + consequent.get(i);
 			if(i != consequent.size()-1) {
-				string = string + ", ";
+				string = string + "and ";
 			} else {
 				string = string + " (" + confidenceLevel + ")";
 			}
