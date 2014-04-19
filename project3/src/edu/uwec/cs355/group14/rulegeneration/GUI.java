@@ -1,20 +1,16 @@
-package gui_rough_draft;
+package edu.uwec.cs355.group14.rulegeneration;
 
 import java.io.*;
 import java.awt.event.*;
-
 import javax.swing.*;
 import javax.swing.filechooser.*;
 
-import edu.uwec.cs355.group14.rulegeneration.APriori;
-import edu.uwec.cs355.group14.rulegeneration.Result;
-
-public class gui extends JFrame {
+public class GUI extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel panel;
 	private JTextArea display;
 	
-	public gui() {
+	public GUI() {
 		initUI();
 	}
 
@@ -52,7 +48,7 @@ public class gui extends JFrame {
 		filetxt.setBounds(190, 100, 200, 25);
 		add(filetxt);
 		
-		JButton run = new JButton("Submit Information");
+		final JButton run = new JButton("Submit Information");
 		run.setBounds(20, 140, 240, 25);
 		run.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -61,9 +57,9 @@ public class gui extends JFrame {
 					double minSupportLevel = Double.parseDouble(msltxt.getText());
 	            	String filePath = filetxt.getText();
 					
-		   			System.out.println("minConfidenceLevel: " + minConfidenceLevel);
-		   			System.out.println("minSupportLevel: " + minSupportLevel);
-		   			System.out.println("filePath: " + filePath);
+//		   			System.out.println("minConfidenceLevel: " + minConfidenceLevel);
+//		   			System.out.println("minSupportLevel: " + minSupportLevel);
+//		   			System.out.println("filePath: " + filePath);
 		   			
 		   			Result result = APriori.algorithm(filePath, minConfidenceLevel, minSupportLevel);
 		   			System.out.println(result.getAssociationRuleSet());
@@ -76,7 +72,7 @@ public class gui extends JFrame {
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
-				System.out.println("run completed");
+//				System.out.println("run completed");
 			}
 		});
 		add(run);
@@ -97,7 +93,7 @@ public class gui extends JFrame {
 		SwingUtilities.invokeLater(new Runnable(){
 			@Override
 			public void run() {
-				gui test = new gui();
+				GUI test = new GUI();
 				test.setVisible(true);
 			}
 		});
