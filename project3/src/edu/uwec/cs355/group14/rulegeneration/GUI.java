@@ -2,8 +2,10 @@ package edu.uwec.cs355.group14.rulegeneration;
 
 import java.io.*;
 import java.awt.event.*;
+
 import javax.swing.*;
 import javax.swing.filechooser.*;
+import javax.swing.filechooser.FileFilter;
 
 public class GUI extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -44,9 +46,31 @@ public class GUI extends JFrame {
 		msltxt.setBounds(190, 60, 60, 25);
 		add(msltxt);
 		
+		
 		final JTextField filetxt = new JTextField();
 		filetxt.setBounds(190, 100, 200, 25);
 		add(filetxt);
+		
+		final JButton openFile = new JButton("Select File");
+		openFile.setBounds(70, 100, 100, 25);
+		add(openFile);
+		openFile.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent ae){
+				try{
+					JFileChooser fileopen = new JFileChooser();
+	                FileFilter filter = new FileNameExtensionFilter("Text Files", "txt");
+	                fileopen.addChoosableFileFilter(filter);
+	                
+	                int ret = fileopen.showDialog(panel, "Open file");
+
+	                if (ret == JFileChooser.APPROVE_OPTION) {
+	                    filetxt.setText(fileopen.getSelectedFile().getName());
+	                }else{
+				
+	                } }finally{
+				
+	                }
+			}});
 		
 		final JButton run = new JButton("Submit Information");
 		run.setBounds(20, 140, 240, 25);
