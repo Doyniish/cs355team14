@@ -5,7 +5,7 @@ import org.restlet.data.Protocol;
 
 public class RestServer {
 	public static void main (String [] args) throws Exception {
-		Server contactServer = new Server(Protocol.HTTP, 8111, ContactServerResource.class);
+		Server contactServer = new Server(Protocol.HTTP, 8111, RestServerResource.class);
 		contactServer.start();
 	}
 
