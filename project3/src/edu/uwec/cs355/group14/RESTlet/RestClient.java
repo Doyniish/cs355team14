@@ -2,7 +2,7 @@ package edu.uwec.cs355.group14.RESTlet;
 
 import org.restlet.resource.ClientResource;
 
-public class Client {
+public class RestClient {
 	public static void main (String [] args) throws Exception {
 		ClientResource clientResource = new ClientResource("http://localhost:8111/?name=Group14");
 		clientResource.get().write(System.out);
