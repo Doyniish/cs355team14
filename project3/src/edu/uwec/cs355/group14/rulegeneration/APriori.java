@@ -3,11 +3,10 @@ package edu.uwec.cs355.group14.rulegeneration;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class APriori {
 	public static void main(String[] args) {
@@ -35,12 +34,17 @@ public class APriori {
 		double minConfidenceLevel = 0.5;
 		Result result = algorithm(filepath, minSupportLevel, minConfidenceLevel);
 		
+		String returned = saveToFile(filepath, result.getAssociationRuleSet());
+		System.out.println("output: " + returned);
+		
 		timer.stopTimer();
 		
 		System.out.println(filepath);
 		System.out.println("Timer: " + timer.getTotal() + " ms");
 		System.out.println("Final result set:\n" + result.getAssociationRuleSet());
 	}
+	
+	
 	
 	public static Result algorithm(String filePath, double minSupportLevel, double minConfidenceLevel) {
 		Result result = new Result();
@@ -133,7 +137,7 @@ public class APriori {
 				}
 				
 				String startDate = "00-00-00";
-				String endDate = "00-00-00";
+//				String endDate = "00-00-00";
 				String defaultTime = "12:00:00";
 
 				if(!isValidDate(currentLine)) {
@@ -152,7 +156,7 @@ public class APriori {
 				if(!isValidDate(currentLine)) {
 					errorLog.add("Line " + line + ": The transacion set does not contain a valid ending date (YYYY-MM-DD).");
 				} else {
-					endDate = currentLine;
+//					endDate = currentLine;
 					++line;
 					currentLine = in.readLine();
 				}
@@ -229,6 +233,23 @@ public class APriori {
 			System.out.println(result.printErrorLog());
 		}
 		return result;
+	}
+	
+	public static String saveToFile(String originalFilepath, AssociationRuleSet ruleSet) {
+		String filepath = originalFilepath.substring(0, originalFilepath.length() - 4) + ".output.txt";
+		FileWriter writer = null;
+		
+		try {
+			writer = new FileWriter(filepath);
+			for(int i = 0; i < ruleSet.getSize(); i++) {
+				writer.write(ruleSet.getRule(i).toString());
+			}
+				writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("error");
+		}
+		return filepath;
 	}
 	
 	public static boolean isValidDate(String dateString) {
