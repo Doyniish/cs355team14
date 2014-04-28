@@ -56,46 +56,24 @@ public class GUI extends JFrame {
 		add(openFile);
 		openFile.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent ae){
-				try{
-					JFileChooser fileopen = new JFileChooser();
-	                FileFilter filter = new FileNameExtensionFilter("Text Files", "txt");
-	                fileopen.addChoosableFileFilter(filter);
+			JFileChooser fileopen = new JFileChooser();
+			FileFilter filter = new FileNameExtensionFilter("Text Files", "txt");
+			fileopen.addChoosableFileFilter(filter);
 	                
-	                int ret = fileopen.showDialog(panel, "Open file");
-
-	                if (ret == JFileChooser.APPROVE_OPTION) {
-	                    filetxt.setText(fileopen.getSelectedFile().getName());
-	                }else{
-				
-	                } }finally{
-				
-	                }
-			}});
+			int ret = fileopen.showDialog(panel, "Open file");
+			if (ret == JFileChooser.APPROVE_OPTION) {
+				filetxt.setText(fileopen.getSelectedFile().getName());
+			}
+		}});
 		
 		final JButton run = new JButton("Submit Information");
 		run.setBounds(20, 140, 240, 25);
 		run.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					double minConfidenceLevel = Double.parseDouble(mcltxt.getText());
-					double minSupportLevel = Double.parseDouble(msltxt.getText());
-	            	String filePath = filetxt.getText();
-					
-//		   			System.out.println("minConfidenceLevel: " + minConfidenceLevel);
-//		   			System.out.println("minSupportLevel: " + minSupportLevel);
-//		   			System.out.println("filePath: " + filePath);
-		   			
-		   			Result result = APriori.algorithm(filePath, minConfidenceLevel, minSupportLevel);
-		   			System.out.println(result.getAssociationRuleSet());
-
-		   			if(result.getErrorLog() == null) {
-		   				display.setText(result.getAssociationRuleSet().toString());
-		   			} else {
-		   				display.setText(result.getErrorLog().toString());
-		   			}
-				} finally {
-				}
-//				System.out.println("run completed");
+				double minConfidenceLevel = Double.parseDouble(mcltxt.getText());
+				double minSupportLevel = Double.parseDouble(msltxt.getText());
+	           	String filePath = filetxt.getText();
+	           	display.setText(APriori.generateRules(filePath, minConfidenceLevel, minSupportLevel).toString());
 			}
 		});
 		add(run);

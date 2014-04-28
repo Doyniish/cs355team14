@@ -45,7 +45,7 @@ public class AssociationRuleSet {
 	public String toString() {
 		String arset = "";
 		for(int i = 0; i < associationRuleSet.size(); i++) {
-			arset = arset + i + ": " + associationRuleSet.get(i);
+			arset = arset + associationRuleSet.get(i);
 			if(i != associationRuleSet.size()-1) {
 				arset = arset + "\n";
 			}

@@ -5,10 +5,14 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class APriori {
+public class APriori implements Serializable {
+	private static final long serialVersionUID = 1L;
+	static ArrayList<String> generatedLines;
+	
 	public static void main(String[] args) {
 		test1();
 //		System.out.println("error");			// does not exist
@@ -28,8 +32,9 @@ public class APriori {
 	public static void test1() {
 		Timer timer = new Timer();
 		timer.startTimer();
-		
-		String filepath = "test/transactions1.txt";
+
+		String filepath = "test\transactions1.txt";
+//		String filepath = "C:\\Users\\John Laptop\\Desktop\\sampleTransactionFile.txt";
 		double minSupportLevel = 0.5;
 		double minConfidenceLevel = 0.5;
 		Result result = algorithm(filepath, minSupportLevel, minConfidenceLevel);
@@ -44,9 +49,22 @@ public class APriori {
 		System.out.println("Final result set:\n" + result.getAssociationRuleSet());
 	}
 	
+	public static ArrayList<String> generateRules(String filepath, double minSupportLevel, double minConfidenceLevel) {
+		generatedLines = new ArrayList<String>();
+		Result result = algorithm(filepath, minSupportLevel, minConfidenceLevel);
+		if(result.getErrorLog() != null) {
+			generatedLines.addAll(result.getErrorLog());
+		} else {
+			AssociationRuleSet rules = result.getAssociationRuleSet();
+//			String returnString = "";
+			for(int i = 0; i < rules.getSize(); i++) {
+				generatedLines.add(rules.getRule(i).toString() + "\n");
+			}
+		}
+		return generatedLines; 
+	}
 	
-	
-	public static Result algorithm(String filePath, double minSupportLevel, double minConfidenceLevel) {
+	private static Result algorithm(String filePath, double minSupportLevel, double minConfidenceLevel) {
 		Result result = new Result();
 		/* Frequent item sets generation */
 		TransactionSet transactionResults = new TransactionSet(minSupportLevel, minConfidenceLevel);
@@ -241,9 +259,10 @@ public class APriori {
 		
 		try {
 			writer = new FileWriter(filepath);
-			for(int i = 0; i < ruleSet.getSize(); i++) {
-				writer.write(ruleSet.getRule(i).toString());
-			}
+//			for(int i = 0; i < ruleSet.getSize(); i++) {
+//				writer.write(ruleSet.getRule(i).toString() + "\n");
+//			}
+				writer.write(ruleSet.toString());
 				writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
