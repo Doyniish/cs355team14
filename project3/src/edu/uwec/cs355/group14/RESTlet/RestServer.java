@@ -5,8 +5,8 @@ import org.restlet.data.Protocol;
 
 public class RestServer {
 	public static void main (String [] args) throws Exception {
-		Server contactServer = new Server(Protocol.HTTP, 8111, RestServerResource.class);
-		contactServer.start();
+		Server restServer = new Server(Protocol.HTTP, 8111, RestServerResource.class);
+		restServer.start();
 	}
 
 	// receives the parameters, store the transaction set in MySQL, generate the

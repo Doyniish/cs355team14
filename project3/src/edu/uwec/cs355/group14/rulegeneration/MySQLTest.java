@@ -3,6 +3,7 @@ package edu.uwec.cs355.group14.rulegeneration;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+
 import junit.framework.TestCase;
 
 public class MySQLTest extends TestCase {

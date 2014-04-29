@@ -1,8 +1,8 @@
 package edu.uwec.cs355.group14.rulegeneration;
 
 import java.util.ArrayList;
-import static java.lang.Double.valueOf;
 import static java.util.Locale.US;
+import static java.lang.Double.valueOf;
 import static java.lang.String.format;
 
 public class AssociationRule {
@@ -13,7 +13,7 @@ public class AssociationRule {
 	public AssociationRule() {
 		this.antecedent = new ArrayList<String>();
 		this.consequent = new ArrayList<String>();
-		this.confidenceLevel = 0;
+		this.confidenceLevel = -1;
 	}
 	
 	public AssociationRule(AssociationRule ar) {
@@ -33,7 +33,7 @@ public class AssociationRule {
 		this.antecedent.addAll(antecedent);
 		this.consequent = new ArrayList<String>();
 		this.consequent.addAll(consequent);
-		this.confidenceLevel = 0;
+		this.confidenceLevel = -1;
 	}
 	
 	public boolean contains(ArrayList<String> items) {
