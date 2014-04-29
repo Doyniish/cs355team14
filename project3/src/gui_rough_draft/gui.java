@@ -65,14 +65,7 @@ public class gui extends JFrame {
 		   			System.out.println("minSupportLevel: " + minSupportLevel);
 		   			System.out.println("filePath: " + filePath);
 		   			
-		   			Result result = APriori.algorithm(filePath, minConfidenceLevel, minSupportLevel);
-		   			System.out.println(result.getAssociationRuleSet());
-
-		   			if(result.getErrorLog() == null) {
-		   				display.setText(result.getAssociationRuleSet().toString());
-		   			} else {
-		   				display.setText(result.getErrorLog().toString());
-		   			}
+		   			display.setText(APriori.generateRules(filePath, minConfidenceLevel, minSupportLevel).toString());
 				} finally {
 					System.out.println("run completed");
 				}
