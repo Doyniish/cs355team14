@@ -74,6 +74,14 @@ public class GUI extends JFrame {
 				double minSupportLevel = Double.parseDouble(msltxt.getText());
 	           	String filePath = filetxt.getText();
 	           	display.setText(APriori.generateRules(filePath, minConfidenceLevel, minSupportLevel).toString());
+	           	try {
+					PrintWriter out = new PrintWriter("Test.txt");
+					out.println(APriori.generateRules(filePath, minConfidenceLevel, minSupportLevel).toString());
+					out.close();
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		add(run);
