@@ -49,7 +49,7 @@ public class APriori implements Serializable {
 		System.out.println("Final result set:\n" + result.getAssociationRuleSet());
 	}
 	
-	public static ArrayList<String> generateRules(String filepath, double minSupportLevel, double minConfidenceLevel) {
+	public static String generateRules(String filepath, double minSupportLevel, double minConfidenceLevel) {
 		generatedLines = new ArrayList<String>();
 		Result result = algorithm(filepath, minSupportLevel, minConfidenceLevel);
 		if(result.getErrorLog() != null) {
@@ -61,7 +61,11 @@ public class APriori implements Serializable {
 				generatedLines.add(rules.getRule(i).toString() + "\n");
 			}
 		}
-		return generatedLines; 
+		String results = "";
+		for(String line : generatedLines) {
+			results += line;
+		}
+		return results;
 	}
 	
 	private static Result algorithm(String filePath, double minSupportLevel, double minConfidenceLevel) {

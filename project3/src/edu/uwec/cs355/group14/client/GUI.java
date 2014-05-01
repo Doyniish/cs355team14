@@ -32,11 +32,11 @@ public class GUI extends JFrame {
 		msl.setBounds(20, 60, 160, 25);
 		add(msl);
 		
-		JLabel filename = new JLabel("File Path");
+		JLabel filename = new JLabel("Filepath");
 		filename.setBounds(20, 100, 140, 25);
 		add(filename);
 		
-		// Text Fields		
+		// Text Fields
 		final JTextField mcltxt = new JTextField();
 		mcltxt.setBounds(190, 30, 60, 25);
 		add(mcltxt);
@@ -45,6 +45,9 @@ public class GUI extends JFrame {
 		msltxt.setBounds(190, 60, 60, 25);
 		add(msltxt);
 		
+		final JLabel savedfiletxt = new JLabel();
+		savedfiletxt.setBounds(20, 170, 500, 25);
+		add(savedfiletxt);
 		
 		final JTextField filetxt = new JTextField();
 		filetxt.setBounds(190, 100, 200, 25);
@@ -53,6 +56,7 @@ public class GUI extends JFrame {
 		final JButton openFile = new JButton("Select File");
 		openFile.setBounds(80, 100, 100, 25);
 		add(openFile);
+		
 		openFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae){
 				JFileChooser fileopen = new JFileChooser();
@@ -82,18 +86,10 @@ public class GUI extends JFrame {
 				if(error.equals("")) {
 					double minConfidenceLevel = Double.parseDouble(mclString);
 					double minSupportLevel = Double.parseDouble(mslString);
-					String filePath = filetxt.getText();
-					display.setText(APriori.generateRules(filePath, minConfidenceLevel, minSupportLevel).toString());
-					try {
-						PrintWriter out = new PrintWriter("Test.txt");
-						out.println(APriori.generateRules(filePath, minConfidenceLevel, minSupportLevel).toString());
-						out.close();
-					} catch (FileNotFoundException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				} else {
-					display.setText(error);
+					String filepath = filetxt.getText();
+					String results = APriori.generateRules(filepath, minConfidenceLevel, minSupportLevel);
+					display.setText(results);
+					savedfiletxt.setText(saveToFile(filepath, results));
 				}
 			}
 		});
@@ -119,6 +115,22 @@ public class GUI extends JFrame {
 			System.out.println();
 			return false; 
 		}
+	}
+	
+	public static String saveToFile(String originalFilepath, String ruleSet) {
+		String filepath = originalFilepath.substring(0, originalFilepath.length() - 4) + ".output.txt";
+		FileWriter writer = null;
+		
+		try {
+			writer = new FileWriter(filepath);
+			writer.write(ruleSet);
+			writer.close();
+			filepath = "Output file saved to " + filepath;
+		} catch (IOException e) {
+			e.printStackTrace();
+			filepath = "File did not save correctly." + e;
+		}
+		return filepath;
 	}
 
 	public static void main (String[] args){
