@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Transaction implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private ArrayList<String> items;
 	private double minSupportLevel;
 	private double actualSupportLevel;

@@ -1,52 +1,20 @@
-package edu.uwec.cs355.group14.rulegeneration;
+package edu.uwec.cs355.group14.client;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class APriori implements Serializable {
-	private static final long serialVersionUID = 1L;
-	static ArrayList<String> generatedLines;
-	
-	public static void main(String[] args) {
-		test1();
-//		System.out.println("error");			// does not exist
-//		readFromFile("error.txt", 0.5, 0.5);
-//		System.out.println("errors");			// empty
-//		readFromFile("errors.txt", 0.5, 0.5);	// only vendor and start
-//		System.out.println("errors2");
-//		readFromFile("errors2.txt", 0.5, 0.5);
-//		System.out.println("errors3");			// no vendor
-//		readFromFile("errors3.txt", 0.5, 0.5);
-//		System.out.println("errors4");			// no vendor
-//		readFromFile("errors4.txt", 0.5, 0.5);
-//		System.out.println("test/transactions1.txt");			// no vendor
-//		readFromFile("test/transactions1.txt", 0.5, 0.5);
-	}
-	
-	public static void test1() {
-		Timer timer = new Timer();
-		timer.startTimer();
+import edu.uwec.cs355.group14.common.*;
 
-		String filepath = "test\transactions1.txt";
-//		String filepath = "C:\\Users\\John Laptop\\Desktop\\sampleTransactionFile.txt";
-		double minSupportLevel = 0.5;
-		double minConfidenceLevel = 0.5;
-		Result result = algorithm(filepath, minSupportLevel, minConfidenceLevel);
-		
-		String returned = saveToFile(filepath, result.getAssociationRuleSet());
-		System.out.println("output: " + returned);
-		
-		timer.stopTimer();
-		
-		System.out.println(filepath);
-		System.out.println("Timer: " + timer.getTotal() + " ms");
-		System.out.println("Final result set:\n" + result.getAssociationRuleSet());
+public class APriori {
+	static ArrayList<String> generatedLines;
+	public static void main(String[] args) {		
 	}
 	
 	public static String generateRules(String filepath, double minSupportLevel, double minConfidenceLevel) {
@@ -55,7 +23,7 @@ public class APriori implements Serializable {
 		if(result.getErrorLog() != null) {
 			generatedLines.addAll(result.getErrorLog());
 		} else {
-			AssociationRuleSet rules = result.getAssociationRuleSet();
+			RuleSet rules = result.getRuleSet();
 //			String returnString = "";
 			for(int i = 0; i < rules.getSize(); i++) {
 				generatedLines.add(rules.getRule(i).toString() + "\n");
@@ -108,11 +76,11 @@ public class APriori implements Serializable {
 			}
 
 			/* Association rule sets */
-			AssociationRuleSet ruleSets = new AssociationRuleSet(minConfidenceLevel);
+			RuleSet ruleSets = new RuleSet(minConfidenceLevel);
 			ruleSets = generateAllPossibleAssociations(filteredSets);
 			ruleSets = filterByConfidence(ruleSets, transactionResults, minConfidenceLevel, transactionsFromFile.getSize());
 
-			result.setAssociationRuleSet(ruleSets);
+			result.setRuleSet(ruleSets);
 			
 		}
 		
@@ -256,98 +224,6 @@ public class APriori implements Serializable {
 		}
 		return result;
 	}
-	
-	public static String saveToFile(String originalFilepath, AssociationRuleSet ruleSet) {
-		String filepath = originalFilepath.substring(0, originalFilepath.length() - 4) + ".output.txt";
-		FileWriter writer = null;
-		
-		try {
-			writer = new FileWriter(filepath);
-//			for(int i = 0; i < ruleSet.getSize(); i++) {
-//				writer.write(ruleSet.getRule(i).toString() + "\n");
-//			}
-				writer.write(ruleSet.toString());
-				writer.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("error");
-		}
-		return filepath;
-	}
-	
-	public static boolean isValidDate(String dateString) {
-	    if (dateString == null || dateString.length() != "yyyy-MM-dd".length()) {
-	        return false;
-	    }
-	    dateString = dateString.substring(0,4) + dateString.substring(5,7) + dateString.substring(8, 10);
-	    int date;
-	    try {
-	        date = Integer.parseInt(dateString);
-	    } catch (NumberFormatException e) {
-	        return false;
-	    }
-
-	    int year = date / 10000;
-	    int month = (date % 10000) / 100;
-	    int day = date % 100;
-
-	    // leap years calculation not valid before 1581
-	    boolean yearOk = (year >= 1581) && (year <= 2500);
-	    boolean monthOk = (month >= 1) && (month <= 12);
-	    boolean dayOk = (day >= 1) && (day <= daysInMonth(year, month));
-
-	    return (yearOk && monthOk && dayOk);
-	}
-	
-	public static boolean isValidTime(String timeString) {
-	    if (timeString == null || timeString.length() != "hh-mm-ss".length()) {
-	        return false;
-	    }
-	    timeString = timeString.substring(0,2) + timeString.substring(3,5) + timeString.substring(6, 8);
-	    int time;
-	    try {
-	        time = Integer.parseInt(timeString);
-	    } catch (NumberFormatException e) {
-	        return false;
-	    }
-
-	    int hours = time / 10000;
-	    int minutes = (time % 10000) / 100;
-	    int seconds = time % 100;
-
-	    boolean hoursOk = (hours >= 0) && (hours <= 24);
-	    boolean minutesOk = (minutes >= 0) && (minutes < 60);
-	    boolean secondsOk = (seconds >= 0) && (seconds < 60);
-
-	    return (hoursOk && minutesOk && secondsOk);
-	}
-	
-
-	private static int daysInMonth(int year, int month) {
-	    int daysInMonth;
-	    switch (month) {
-	        case 1: // fall through
-	        case 3: // fall through
-	        case 5: // fall through
-	        case 7: // fall through
-	        case 8: // fall through
-	        case 10: // fall through
-	        case 12:
-	            daysInMonth = 31;
-	            break;
-	        case 2:
-	            if (((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0)) {
-	                daysInMonth = 29;
-	            } else {
-	                daysInMonth = 28;
-	            }
-	            break;
-	        default:
-	            // returns 30 even for nonexistant months 
-	            daysInMonth = 30;
-	    }
-	    return daysInMonth;
-	}
 
 	private static Transaction generateUniqueItems(TransactionSet transactionsFromFile, double minSupportLevel) {
 		Transaction uniqueItems = new Transaction(minSupportLevel);
@@ -476,24 +352,24 @@ public class APriori implements Serializable {
 		}
 	}
 
-	private static AssociationRuleSet generateAllPossibleAssociations(TransactionSet results) {
-		AssociationRuleSet ruleSetWithDuplicates = new AssociationRuleSet(results.getMinConfidenceLevel());
+	private static RuleSet generateAllPossibleAssociations(TransactionSet results) {
+		RuleSet ruleSetWithDuplicates = new RuleSet(results.getMinConfidenceLevel());
 		for(int i = 0; i < results.getSize(); i++) {
-			AssociationRuleSet rules = generatePossibleAntecedentsRecursive(results.getTransaction(i), new AssociationRule(), results.getMinConfidenceLevel(), results.getTransaction(i).getSize() - 1); // wrapper method
+			RuleSet rules = generatePossibleAntecedentsRecursive(results.getTransaction(i), new Rule(), results.getMinConfidenceLevel(), results.getTransaction(i).getSize() - 1); // wrapper method
 			rules = generatePossibleConsequents(rules, results.getTransaction(i));
 
 			for(int j = 0; j < rules.getSize(); j++) {
 				Transaction unusedItems = new Transaction(results.getTransaction(i));
-				for(int k = 0; k < rules.getRule(j).getAnteSize(); k++) {
+				for(int k = 0; k < rules.getRule(j).getAntecedentSize(); k++) {
 					unusedItems.remove(rules.getRule(j).getAntecedent().get(k));
 				}
 			}
 			
 			ruleSetWithDuplicates.getRules().addAll(rules.getRules());
 		}
-		AssociationRuleSet ruleSets = new AssociationRuleSet(results.getMinConfidenceLevel());
+		RuleSet ruleSets = new RuleSet(results.getMinConfidenceLevel());
 		for(int i = 0; i < ruleSetWithDuplicates.getSize(); i++) {
-			AssociationRule rule = ruleSetWithDuplicates.getRule(i);
+			Rule rule = ruleSetWithDuplicates.getRule(i);
 
 			if(!ruleSets.containsRule(rule)) {
 				ruleSets.add(rule);
@@ -502,34 +378,34 @@ public class APriori implements Serializable {
 		return ruleSets;
 	}
 
-	private static AssociationRuleSet generatePossibleAntecedentsRecursive(Transaction transaction, AssociationRule associationRule, double minConfidenceLevel, int itemsToAdd) {
-		AssociationRuleSet ruleSet = new AssociationRuleSet(minConfidenceLevel);
+	private static RuleSet generatePossibleAntecedentsRecursive(Transaction transaction, Rule Rule, double minConfidenceLevel, int itemsToAdd) {
+		RuleSet ruleSet = new RuleSet(minConfidenceLevel);
 		if(itemsToAdd == 1) {
 			for(int i = 0; i < transaction.getSize(); i++) {
-				AssociationRule associationRule2 = new AssociationRule(associationRule);
-				associationRule2.addAntecedent(transaction.getItem(i));
-				ruleSet.add(associationRule2);
+				Rule Rule2 = new Rule(Rule);
+				Rule2.addAntecedent(transaction.getItem(i));
+				ruleSet.add(Rule2);
 			}
 			return ruleSet;
 		} else {
-			if(associationRule.getAntecedent().size() > 0) {
-				ruleSet.add(associationRule);
+			if(Rule.getAntecedent().size() > 0) {
+				ruleSet.add(Rule);
 			}
 			for(int i = 0; i < transaction.getSize(); i++) {
-				AssociationRule associationRule2 = new AssociationRule(associationRule);
-				associationRule2.addAntecedent(transaction.getItem(i));
+				Rule Rule2 = new Rule(Rule);
+				Rule2.addAntecedent(transaction.getItem(i));
 				Transaction transaction2 = new Transaction(transaction);
 				transaction2.remove(transaction.getItem(i));
-				ruleSet.add(associationRule2);
-				AssociationRuleSet preResults = generatePossibleAntecedentsRecursive(transaction2, associationRule2, minConfidenceLevel, itemsToAdd - 1);
+				ruleSet.add(Rule2);
+				RuleSet preResults = generatePossibleAntecedentsRecursive(transaction2, Rule2, minConfidenceLevel, itemsToAdd - 1);
 				ruleSet.addAll(preResults);
 			}
 		}
 		return ruleSet;
 	}
 	
-	private static AssociationRuleSet generatePossibleConsequents(AssociationRuleSet rules, Transaction transaction) {
-		AssociationRuleSet ruleSet = new AssociationRuleSet(rules.getMinConfidenceLevel());
+	private static RuleSet generatePossibleConsequents(RuleSet rules, Transaction transaction) {
+		RuleSet ruleSet = new RuleSet(rules.getMinConfidenceLevel());
 		
 		for(int i = 0; i < rules.getSize(); i++) {
 			for(int j = 0; j < transaction.getSize(); j++) {
@@ -543,8 +419,8 @@ public class APriori implements Serializable {
 		return ruleSet;
 	}
 
-	private static AssociationRuleSet filterByConfidence(AssociationRuleSet possibleRuleSets, TransactionSet transactionSet, double minConfidenceLevel, int transactionCount) {
-		AssociationRuleSet finalRules = new AssociationRuleSet(possibleRuleSets.getMinConfidenceLevel());
+	private static RuleSet filterByConfidence(RuleSet possibleRuleSets, TransactionSet transactionSet, double minConfidenceLevel, int transactionCount) {
+		RuleSet finalRules = new RuleSet(possibleRuleSets.getMinConfidenceLevel());
 
 		for(int i = 0; i < possibleRuleSets.getSize(); i++) {
 			double supportCountX = 0;
@@ -566,4 +442,27 @@ public class APriori implements Serializable {
 		}
 		return finalRules;
 	}
+
+	
+	public static boolean isValidDate(String date) {
+		try {
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			df.setLenient(false);
+			df.parse(date);
+			return true;
+		} catch (ParseException e) {
+			return false;
+		}
+	}
+	
+	public static boolean isValidTime(String time) {
+		try {
+			DateFormat df = new SimpleDateFormat("HH:mm:ss");
+			df.setLenient(false);
+			df.parse(time);
+			return true;
+		} catch (ParseException e) {
+			return false;
+		}
+	}		
 }
