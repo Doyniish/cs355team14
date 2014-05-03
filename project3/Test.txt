@@ -1,11 +1,1 @@
-[If apples Then beer (0.6667)
-, If beer Then apples (0.6667)
-, If apples Then cheese (0.3333)
-, If cheese Then apples (1.0)
-, If apples Then diapers (0.3333)
-, If diapers Then apples (0.5)
-, If beer Then cheese (0.3333)
-, If cheese Then beer (1.0)
-, If beer Then diapers (0.6667)
-, If diapers Then beer (1.0)
-]
+[]
