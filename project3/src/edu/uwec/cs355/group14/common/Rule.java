@@ -17,7 +17,7 @@ public class Rule implements Serializable {
 	public Rule() {				// empty
 		this.antecedent = new ArrayList<String>();
 		this.consequent = new ArrayList<String>();
-		this.confidenceLevel = 0;
+		this.confidenceLevel = -1;
 	}
 	
 	public Rule(ArrayList<String> antecedent, ArrayList<String> consequent) {
@@ -25,11 +25,10 @@ public class Rule implements Serializable {
 		this.antecedent.addAll(antecedent);
 		this.consequent = new ArrayList<String>();
 		this.consequent.addAll(consequent);
-		this.confidenceLevel = 0;
+		this.confidenceLevel = -1;
 	}
 	
 	public Rule(Rule ar) {		// copy
-		this.confidenceLevel = ar.confidenceLevel;
 		this.antecedent = new ArrayList<String>();
 		for(String antecedent : ar.getAntecedent()) {
 			this.antecedent.add(antecedent);
@@ -38,6 +37,37 @@ public class Rule implements Serializable {
 		for(String consequent : ar.getConsequent()) {
 			this.consequent.add(consequent);
 		}
+		this.confidenceLevel = ar.confidenceLevel;
+	}
+	/*			Other Methods				*/
+	@Override
+	public String toString() {
+		String string = "If ";
+		for(int i = 0; i < antecedent.size()-1; i++) {
+			string += antecedent.get(i) + " and ";
+		}
+		if(antecedent.size() > 0) {
+			string += antecedent.get(antecedent.size()-1) + " Then ";
+		}
+		for(int i = 0; i < consequent.size()-1; i++) {
+			string += consequent.get(i) + " and ";
+		}
+		if(consequent.size() > 0) {
+			string += consequent.get(consequent.size()-1) + " (" + confidenceLevel + ")";
+		}
+		return string;
+	}
+	
+	public void addAntecedent(String string) {
+		this.antecedent.add(string);
+	}
+	
+	public void addConsequent(String string) {
+		this.consequent.add(string);
+	}
+	
+	public boolean contains(ArrayList<String> items) {
+		return this.getAntecedent().containsAll(items) || this.getConsequent().containsAll(items);
 	}
 	
 	/*		 	Getters and Setters			 */
@@ -71,36 +101,5 @@ public class Rule implements Serializable {
 	
 	public int getConsequentSize() {
 		return this.consequent.size();
-	}
-	
-	/*			Other Methods				*/
-	public void addAntecedent(String string) {
-		this.antecedent.add(string);
-	}
-	
-	public void addConsequent(String string) {
-		this.consequent.add(string);
-	}
-	
-	public boolean contains(ArrayList<String> items) {
-		return this.getAntecedent().containsAll(items) || this.getConsequent().containsAll(items);
-	}
-	
-	@Override
-	public String toString() {
-		String string = "If ";
-		for(int i = 0; i < antecedent.size() - 1; i++) {
-			string = string + antecedent.get(i) + " Then ";
-		}
-		if(antecedent.size() > 0) {
-			string = string + antecedent.get(antecedent.size()-1) + " and ";
-		}
-		for(int i = 0; i < consequent.size() - 1; i++) {
-			string = string + consequent.get(i) + "and ";
-		}
-		if(consequent.size() > 0) {
-			string = string + consequent.get(consequent.size()-1) + " (" + confidenceLevel + ")";
-		}
-		return string;
 	}
 }

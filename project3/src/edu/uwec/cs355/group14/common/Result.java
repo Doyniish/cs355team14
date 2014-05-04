@@ -10,35 +10,45 @@ public class Result {
 	public TransactionSet getTransactionSet() {
 		return transactionSet;
 	}
-	
 	public void setTransactionSet(TransactionSet transactionSet) {
 		this.transactionSet = new TransactionSet(transactionSet);
 	}
-	
 	public RuleSet getRuleSet() {
 		return ruleSet;
 	}
-	
 	public void setRuleSet(RuleSet ruleSet) {
 		this.ruleSet = new RuleSet(ruleSet);
 	}
-	
 	public ArrayList<String> getErrorLog() {
 		return errorLog;
 	}
-	
 	public void setErrorLog(ArrayList<String> errorLog) {
 		this.errorLog = errorLog;
 	}
+	public String toString() {
+		String string = "transactionSet:";
+		if(transactionSet != null) {
+			string += "\n" + transactionSet;
+		} else {
+			string += " none";
+		}
+		string += "\nerrorLog:";
+		if(errorLog != null) {
+			string += "\n" + printErrorLog();
+		} else {
+			string += " none";
+		}
+		return string;
+	}
 	
 	public String printErrorLog() {
-		String errorString = "";
+		String string = "";
 		for(int i = 0; i < errorLog.size(); i++) {
-			errorString = errorString + errorLog.get(i);
+			string = string + errorLog.get(i);
 			if(i != errorLog.size() - 1) {
-				errorString = errorString + "\n";
+				string = string + "\n";
 			}
 		}
-		return errorString;
+		return string;
 	}
 }

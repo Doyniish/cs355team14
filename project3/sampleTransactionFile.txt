@@ -5,3 +5,4 @@ PaulMart
 {Beer, Diapers}
 {Apples, Beer, Diapers}
 {Apples}
+{Beer, Cheese}

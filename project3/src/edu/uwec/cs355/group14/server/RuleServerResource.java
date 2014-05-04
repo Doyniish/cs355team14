@@ -9,9 +9,9 @@ import edu.uwec.cs355.group14.common.*;
 
 public class RuleServerResource extends ServerResource implements RuleResource {
 	// data
-	private double minSupportLevel = -1;
-	private double minConfidenceLevel = -1;
-	private static TransactionSet transactionSet = new TransactionSet();
+	private double minSupportLevel;
+	private double minConfidenceLevel;
+	private static TransactionSet transactionSet = null;
 		
 	// methods
 	public RuleServerResource () {

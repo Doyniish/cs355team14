@@ -10,11 +10,6 @@ public class RuleSet implements Serializable {
 	private double minConfidenceLevel;
 
 	/*			Constructors				*/
-	public RuleSet() {						// empty
-		ruleSet = new ArrayList<Rule>();
-		this.minConfidenceLevel = 0;
-	}
-	
 	public RuleSet(double minConfidenceLevel) {
 		ruleSet = new ArrayList<Rule>();
 		this.minConfidenceLevel = minConfidenceLevel;
@@ -87,10 +82,10 @@ public class RuleSet implements Serializable {
 	public String toString() {
 		String string = "";
 		for(int i = 0; i < ruleSet.size()-1; i++) {
-			string = string + ruleSet.get(i) + "\n";
+			string += i + ": " + ruleSet.get(i) + "\n";
 		}
 		if(ruleSet.size() > 0) {
-			string = string + ruleSet.get(ruleSet.size()-1);
+			string += ruleSet.get(ruleSet.size()-1);
 		}
 		return string;
 	}	

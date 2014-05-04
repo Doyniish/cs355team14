@@ -87,7 +87,7 @@ public class GUI extends JFrame {
 					double minConfidenceLevel = Double.parseDouble(mclString);
 					double minSupportLevel = Double.parseDouble(mslString);
 					String filepath = filetxt.getText();
-					String results = APriori.generateRules(filepath, minConfidenceLevel, minSupportLevel);
+					String results = APriori.generateRules(filepath, minSupportLevel, minConfidenceLevel);
 					display.setText(results);
 					savedfiletxt.setText(saveToFile(filepath, results));
 				}
@@ -112,13 +112,12 @@ public class GUI extends JFrame {
 			double input = Double.parseDouble(number);
 			return (input >= 0.0 && input <= 1.0);
 		} catch (NumberFormatException e) {
-			System.out.println();
 			return false; 
 		}
 	}
 	
 	public static String saveToFile(String originalFilepath, String ruleSet) {
-		String filepath = originalFilepath.substring(0, originalFilepath.length() - 4) + ".output.txt";
+		String filepath = originalFilepath.substring(0, originalFilepath.length() - 3) + "output.txt";
 		FileWriter writer = null;
 		
 		try {

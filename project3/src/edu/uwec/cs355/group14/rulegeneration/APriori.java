@@ -33,7 +33,7 @@ public class APriori implements Serializable {
 		Timer timer = new Timer();
 		timer.startTimer();
 
-		String filepath = "test\transactions1.txt";
+		String filepath = "test\\transactions1.txt";
 //		String filepath = "C:\\Users\\John Laptop\\Desktop\\sampleTransactionFile.txt";
 		double minSupportLevel = 0.5;
 		double minConfidenceLevel = 0.5;

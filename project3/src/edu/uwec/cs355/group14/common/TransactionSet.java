@@ -5,34 +5,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class TransactionSet implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private ArrayList<Transaction> transactionSet;
 	private double minSupportLevel;
 	private double minConfidenceLevel;
 		
 	/*		Constructors	*/
-	public TransactionSet() {
-		this.transactionSet = new ArrayList<Transaction>();
-		this.minSupportLevel = -1;
-		this.minConfidenceLevel = -1;
-	}
-	
 	public TransactionSet(double minSupportLevel, double minConfidenceLevel) {
 		this.transactionSet = new ArrayList<Transaction>();
 		this.minSupportLevel = minSupportLevel;
 		this.minConfidenceLevel = minConfidenceLevel;
-	}
-
-	public TransactionSet(Transaction transaction) {
-		this.transactionSet = new ArrayList<Transaction>();
-		this.transactionSet.add(transaction);
-		this.minSupportLevel = 0;
-	}
-	
-	public TransactionSet(Transaction transaction, double minSupportLevel, double minConfidenceLevel) {
-		this.transactionSet = new ArrayList<Transaction>();
-		this.transactionSet.add(transaction);
-		this.minConfidenceLevel = minConfidenceLevel;
-		this.minSupportLevel = minSupportLevel;
 	}
 	
 	public TransactionSet(TransactionSet transactionSet) {	// copy constructor
@@ -41,9 +23,8 @@ public class TransactionSet implements Serializable {
 			Transaction newTransaction = new Transaction(transaction);
 			this.transactionSet.add(newTransaction);
 		}
-		this.transactionSet = transactionSet.getTransactionSet();
-		this.minConfidenceLevel = transactionSet.getMinConfidenceLevel();
 		this.minSupportLevel = transactionSet.getMinSupportLevel();
+		this.minConfidenceLevel = transactionSet.getMinConfidenceLevel();
 	}
 	
 	/*		Original Methods 	*/
