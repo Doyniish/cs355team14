@@ -24,26 +24,26 @@ public class GUI extends JFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 		// Labels
-		JLabel mcl = new JLabel("Min. Confidence Level");
-		mcl.setBounds(20, 30, 160, 25);
-		add(mcl);
-		
 		JLabel msl = new JLabel("Min. Support Level");
-		msl.setBounds(20, 60, 160, 25);
+		msl.setBounds(20, 30, 160, 25);
 		add(msl);
+		
+		JLabel mcl = new JLabel("Min. Confidence Level");
+		mcl.setBounds(20, 60, 160, 25);
+		add(mcl);
 		
 		JLabel filename = new JLabel("Filepath");
 		filename.setBounds(20, 100, 140, 25);
 		add(filename);
 		
 		// Text Fields
-		final JTextField mcltxt = new JTextField();
-		mcltxt.setBounds(190, 30, 60, 25);
-		add(mcltxt);
-	
 		final JTextField msltxt = new JTextField();
-		msltxt.setBounds(190, 60, 60, 25);
+		msltxt.setBounds(190, 30, 60, 25);
 		add(msltxt);
+	
+		final JTextField mcltxt = new JTextField();
+		mcltxt.setBounds(190, 60, 60, 25);
+		add(mcltxt);
 		
 		final JLabel savedfiletxt = new JLabel();
 		savedfiletxt.setBounds(20, 170, 500, 25);
