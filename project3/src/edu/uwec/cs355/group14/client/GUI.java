@@ -89,7 +89,7 @@ public class GUI extends JFrame {
 					String filepath = filetxt.getText();
 					String results = APriori.generateRules(filepath, minSupportLevel, minConfidenceLevel);
 					display.setText(results);
-					savedfiletxt.setText(saveToFile(filepath, results));
+					savedfiletxt.setText(saveToFile(filepath, results, results.equals("")));
 				}
 			}
 		});
@@ -116,7 +116,7 @@ public class GUI extends JFrame {
 		}
 	}
 	
-	public static String saveToFile(String originalFilepath, String ruleSet) {
+	public static String saveToFile(String originalFilepath, String ruleSet, boolean isEmpty) {
 		String filepath = originalFilepath.substring(0, originalFilepath.length() - 3) + "output.txt";
 		FileWriter writer = null;
 		
@@ -125,9 +125,12 @@ public class GUI extends JFrame {
 			writer.write(ruleSet);
 			writer.close();
 			filepath = "Output file saved to " + filepath;
+			if(isEmpty) {
+				filepath = "Generated 0 rules. " + filepath;
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
-			filepath = "File did not save correctly." + e;
+			filepath = "File did not save correctly. " + e;
 		}
 		return filepath;
 	}
