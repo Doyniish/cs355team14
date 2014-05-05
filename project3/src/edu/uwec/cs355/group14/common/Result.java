@@ -122,6 +122,8 @@ public class Result {
 									errors.add("Line " + line + ": There are two consecutive commas in the transaction file.");
 								} else if(itemsInTransaction.size() > 1000) {
 									errors.add("Line " + line + ": The transaction contains over 1000 items. (item: " + itemsFromString[i] + ")");
+								} else if(itemsFromString[i].matches(".*\\W.*")) {
+									errors.add("Line " + line + ": The transaction contains items with illegal characters (item: " + itemsFromString[i] + ")");
 								} else if(!itemsInTransaction.contains(itemsFromString[i])) {
 									itemsInTransaction.add(itemsFromString[i]);
 								}

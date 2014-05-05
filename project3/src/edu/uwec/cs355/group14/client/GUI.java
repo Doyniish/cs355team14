@@ -2,9 +2,12 @@ package edu.uwec.cs355.group14.client;
 
 import java.io.*;
 import java.awt.event.*;
+
 import javax.swing.*;
 import javax.swing.filechooser.*;
 import javax.swing.filechooser.FileFilter;
+
+import edu.uwec.cs355.group14.server.APriori;
 
 public class GUI extends JFrame {
 	private static final long serialVersionUID = 1L;

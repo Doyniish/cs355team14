@@ -1,14 +1,4 @@
-package edu.uwec.cs355.group14.client;
-
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
+package edu.uwec.cs355.group14.server;import java.util.Collections;
 
 import edu.uwec.cs355.group14.common.Rule;
 import edu.uwec.cs355.group14.common.RuleSet;
@@ -19,7 +9,11 @@ import edu.uwec.cs355.group14.common.Result;
 
 public class APriori {
 	public static void main(String[] args) {
-		System.out.println("Rules:\n" + generateRules("test/transactions7.txt", 0.012, 0.6));
+		
+//		String a = "}}";
+//		System.out.println(a.matches(".*\\W.*"));
+		
+		System.out.println("Rules:\n" + generateRules("test/transactions2.txt", 0.012, 0.6));
 	}
 	
 	public static String generateRules(String filepath, double minSupportLevel, double minConfidenceLevel) {
