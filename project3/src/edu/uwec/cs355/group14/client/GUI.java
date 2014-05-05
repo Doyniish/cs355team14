@@ -7,7 +7,10 @@ import javax.swing.*;
 import javax.swing.filechooser.*;
 import javax.swing.filechooser.FileFilter;
 
-import edu.uwec.cs355.group14.server.APriori;
+import org.restlet.resource.ClientResource;
+
+import edu.uwec.cs355.group14.common.Result;
+import edu.uwec.cs355.group14.common.RuleSet;
 
 public class GUI extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -27,26 +30,26 @@ public class GUI extends JFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 		// Labels
-		JLabel mcl = new JLabel("Min. Confidence Level");
-		mcl.setBounds(20, 30, 160, 25);
-		add(mcl);
-		
 		JLabel msl = new JLabel("Min. Support Level");
-		msl.setBounds(20, 60, 160, 25);
+		msl.setBounds(20, 30, 160, 25);
 		add(msl);
+		
+		JLabel mcl = new JLabel("Min. Confidence Level");
+		mcl.setBounds(20, 60, 160, 25);
+		add(mcl);
 		
 		JLabel filename = new JLabel("Filepath");
 		filename.setBounds(20, 100, 140, 25);
 		add(filename);
 		
 		// Text Fields
-		final JTextField mcltxt = new JTextField();
-		mcltxt.setBounds(190, 30, 60, 25);
-		add(mcltxt);
-	
 		final JTextField msltxt = new JTextField();
-		msltxt.setBounds(190, 60, 60, 25);
+		msltxt.setBounds(190, 30, 60, 25);
 		add(msltxt);
+	
+		final JTextField mcltxt = new JTextField();
+		mcltxt.setBounds(190, 60, 60, 25);
+		add(mcltxt);
 		
 		final JLabel savedfiletxt = new JLabel();
 		savedfiletxt.setBounds(20, 170, 500, 25);
@@ -84,15 +87,29 @@ public class GUI extends JFrame {
 					error = "Minimum support level must be a positive number between 0 and 1, inclusive.\n";
 				}
 				if(!isValidNumber(mslString)) {
-					error = error + "Minimum confidence level must be a positive number between 0 and 1, inclusive.\n";
+					error += "Minimum confidence level must be a positive number between 0 and 1, inclusive.\n";
 				}
 				if(error.equals("")) {
 					double minConfidenceLevel = Double.parseDouble(mclString);
 					double minSupportLevel = Double.parseDouble(mslString);
 					String filepath = filetxt.getText();
-					String results = APriori.generateRules(filepath, minSupportLevel, minConfidenceLevel);
-					display.setText(results);
-					savedfiletxt.setText(saveToFile(filepath, results, results.equals("")));
+					
+					Result fileTransactions = new Result(filepath, minSupportLevel, minConfidenceLevel);
+										
+					String resultString = "";
+					if(fileTransactions.getErrorLog() == null) {
+						ClientResource clientResource = new ClientResource("http://localhost:8111/");
+						RuleResource proxy = clientResource.wrap(RuleResource.class);
+						
+						proxy.store(fileTransactions);
+						RuleSet ruleSet = proxy.retrieve();
+						resultString += ruleSet.toString();
+					} else {
+						resultString += fileTransactions.printErrorLog();
+					}
+	
+					display.setText(resultString);
+					savedfiletxt.setText(saveToFile(filepath, resultString));
 				}
 			}
 		});
@@ -119,7 +136,7 @@ public class GUI extends JFrame {
 		}
 	}
 	
-	public static String saveToFile(String originalFilepath, String ruleSet, boolean isEmpty) {
+	public static String saveToFile(String originalFilepath, String ruleSet) {
 		String filepath = originalFilepath.substring(0, originalFilepath.length() - 3) + "output.txt";
 		FileWriter writer = null;
 		
@@ -128,7 +145,7 @@ public class GUI extends JFrame {
 			writer.write(ruleSet);
 			writer.close();
 			filepath = "Output file saved to " + filepath;
-			if(isEmpty) {
+			if(ruleSet.equals("")) {
 				filepath = "Generated 0 rules. " + filepath;
 			}
 		} catch (IOException e) {

@@ -4,12 +4,14 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-public class Result {
+public class Result implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private TransactionSet transactionSet = null;
 	private ArrayList<String> errorLog = null;
 	

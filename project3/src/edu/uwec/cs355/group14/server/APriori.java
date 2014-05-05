@@ -1,36 +1,22 @@
-package edu.uwec.cs355.group14.server;import java.util.Collections;
+package edu.uwec.cs355.group14.server;
 
+import java.util.Collections;
 import edu.uwec.cs355.group14.common.Rule;
 import edu.uwec.cs355.group14.common.RuleSet;
 import edu.uwec.cs355.group14.common.Timer;
 import edu.uwec.cs355.group14.common.Transaction;
 import edu.uwec.cs355.group14.common.TransactionSet;
-import edu.uwec.cs355.group14.common.Result;
 
 public class APriori {
-	public static void main(String[] args) {
-		
-//		String a = "}}";
-//		System.out.println(a.matches(".*\\W.*"));
-		
-		System.out.println("Rules:\n" + generateRules("test/transactions2.txt", 0.012, 0.6));
-	}
-	
-	public static String generateRules(String filepath, double minSupportLevel, double minConfidenceLevel) {
+	public static RuleSet generateRules(TransactionSet transactionSet, double minSupportLevel, double minConfidenceLevel) {
 		Timer timer = new Timer();
 		timer.startTimer();
-		Result fileTransactions = new Result(filepath, minSupportLevel, minConfidenceLevel);
+
+		RuleSet ruleSet = algorithm(transactionSet, minSupportLevel, minConfidenceLevel);
 		
-		String resultString = "";
-		if(fileTransactions.getErrorLog() == null) {
-			RuleSet ruleSet = algorithm(fileTransactions.getTransactionSet(), minSupportLevel, minConfidenceLevel);
-			resultString += ruleSet.toString();
-		} else {
-			resultString += fileTransactions.printErrorLog();
-		}
 		timer.stopTimer();
 		System.out.println("Timer: " + timer.getTotal() + " ms");
-		return resultString;
+		return ruleSet;
 	}
 	
 	private static RuleSet algorithm(TransactionSet transactionsFromFile, double minSupportLevel, double minConfidenceLevel) {
