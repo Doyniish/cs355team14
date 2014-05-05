@@ -1,6 +1,10 @@
-package edu.uwec.cs355.group14.rulegeneration;
+package edu.uwec.cs355.group14.tests;
 
 import java.io.IOException;
+
+import edu.uwec.cs355.group14.rulegeneration.APriori;
+import edu.uwec.cs355.group14.rulegeneration.Transaction;
+import edu.uwec.cs355.group14.rulegeneration.TransactionSet;
 import junit.framework.TestCase;
 
 public class APrioriTest extends TestCase {

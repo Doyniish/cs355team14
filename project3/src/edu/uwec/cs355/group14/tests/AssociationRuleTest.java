@@ -1,4 +1,4 @@
-package edu.uwec.cs355.group14.rulegeneration;
+package edu.uwec.cs355.group14.tests;
 
 import junit.framework.TestCase;
 

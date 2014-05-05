@@ -1,9 +1,13 @@
-package edu.uwec.cs355.group14.rulegeneration;
+package edu.uwec.cs355.group14.tests;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import edu.uwec.cs355.group14.rulegeneration.AssociationRuleSet;
+import edu.uwec.cs355.group14.rulegeneration.MySQL;
+import edu.uwec.cs355.group14.rulegeneration.Transaction;
+import edu.uwec.cs355.group14.rulegeneration.TransactionSet;
 import junit.framework.TestCase;
 
 public class MySQLTest extends TestCase {
