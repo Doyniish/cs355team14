@@ -19,15 +19,12 @@ import edu.uwec.cs355.group14.common.Result;
 
 public class APriori {
 	public static void main(String[] args) {
-		Timer timer = new Timer();
-		timer.startTimer();
-		String rules = generateRules("test/transactions7.txt", 0.012, 0.6);
-		timer.stopTimer(); 
-		System.out.println("Rules:\n" + rules);
-		System.out.println("time: " + timer.getTotal());
+		System.out.println("Rules:\n" + generateRules("test/transactions7.txt", 0.012, 0.6));
 	}
 	
 	public static String generateRules(String filepath, double minSupportLevel, double minConfidenceLevel) {
+		Timer timer = new Timer();
+		timer.startTimer();
 		Result fileTransactions = new Result(filepath, minSupportLevel, minConfidenceLevel);
 		
 		String resultString = "";
@@ -37,6 +34,8 @@ public class APriori {
 		} else {
 			resultString += fileTransactions.printErrorLog();
 		}
+		timer.stopTimer();
+		System.out.println("Timer: " + timer.getTotal() + " ms");
 		return resultString;
 	}
 	
