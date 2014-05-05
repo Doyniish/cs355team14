@@ -1,8 +1,12 @@
 PaulMart
 2014-03-05
 2014-03-06
-{Apples, Beer, Cheese}
-{Beer, Diapers}
-{Apples, Beer, Diapers}
-{Apples}
-{Beer, Cheese}
+{A, B, E}
+{B, D}
+{B, C}
+{A, B, D}
+{A, C}
+{B, C}
+{A, C}
+{A, B, C, E}
+{A, B, C}

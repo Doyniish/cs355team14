@@ -1,5 +1,9 @@
 package edu.uwec.cs355.group14.common;
 
+import static java.lang.Double.valueOf;
+import static java.lang.String.format;
+import static java.util.Locale.US;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -52,7 +56,7 @@ public class Transaction implements Serializable {
 		if(items.size() > 0) {
 			string += items.get(items.size() - 1);
 		}
-		string += "} (" + this.supportLevel + ")";
+		string += "} (" + supportLevel + ")";
 		return string;
 	}
 	
@@ -106,7 +110,7 @@ public class Transaction implements Serializable {
 	}
 
 	public void setSupportLevel(double supportLevel) {
-		this.supportLevel = supportLevel;
+		this.supportLevel = valueOf(format(US, "%1$.4f", supportLevel));
 	}
 
 	public String getDate() {

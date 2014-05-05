@@ -43,14 +43,14 @@ public class TransactionSet implements Serializable {
 	
 	@Override
 	public String toString() {
-		String trSet = "";
-		for(int i = 0; i < transactionSet.size(); i++) {
-			trSet = trSet + transactionSet.get(i);
-			if(i != transactionSet.size()-1) {
-				trSet = trSet + "\n";
-			}
+		String string = "";
+		for(int i = 0; i < transactionSet.size()-1; i++) {
+			string += transactionSet.get(i) + "\n";
 		}
-		return trSet;
+		if(transactionSet.size() > 0) {
+			string += transactionSet.get(transactionSet.size()-1);
+		}
+		return string;
 	}
 	
 	/*		Getters and Setters, etc. 	*/

@@ -3,5 +3,5 @@ PaulMart
 2014-03-16
 { Apples, Beer, Cheese }
 {Beer, Cheese }
-{ Cheese, Apples} 2010-10-10 20:10:10
+{ Cheese, Apples}
 {Apples}

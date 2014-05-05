@@ -79,13 +79,11 @@ public class RuleSet implements Serializable {
 		return foundMatch;
 	}
 
+	@Override
 	public String toString() {
 		String string = "";
-		for(int i = 0; i < ruleSet.size()-1; i++) {
-			string += i + ": " + ruleSet.get(i) + "\n";
-		}
-		if(ruleSet.size() > 0) {
-			string += ruleSet.get(ruleSet.size()-1);
+		for(int i = 0; i < ruleSet.size(); i++) {
+			string += ruleSet.get(i) + "\n";
 		}
 		return string;
 	}	

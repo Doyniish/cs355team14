@@ -10,214 +10,72 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import edu.uwec.cs355.group14.common.*;
+import edu.uwec.cs355.group14.common.Rule;
+import edu.uwec.cs355.group14.common.RuleSet;
+import edu.uwec.cs355.group14.common.Timer;
+import edu.uwec.cs355.group14.common.Transaction;
+import edu.uwec.cs355.group14.common.TransactionSet;
+import edu.uwec.cs355.group14.common.Result;
 
 public class APriori {
 	public static void main(String[] args) {
-		System.out.println(generateRules("test\\transactions7.txt", 0.012, 0.6));
-		System.out.println("done");
+		Timer timer = new Timer();
+		timer.startTimer();
+		String rules = generateRules("test/transactions7.txt", 0.012, 0.6);
+		timer.stopTimer(); 
+		System.out.println("Rules:\n" + rules);
+		System.out.println("time: " + timer.getTotal());
 	}
 	
 	public static String generateRules(String filepath, double minSupportLevel, double minConfidenceLevel) {
-		Result result = algorithm(filepath, minSupportLevel, minConfidenceLevel);
+		Result fileTransactions = new Result(filepath, minSupportLevel, minConfidenceLevel);
 		
-		System.out.println("results:");
-		System.out.println(result.getRuleSet());
-		System.out.println("end");
-		String results = "";
-		
-		if(result.getErrorLog() == null) {
-			RuleSet rules = result.getRuleSet();
-			results = rules.toString();
+		String resultString = "";
+		if(fileTransactions.getErrorLog() == null) {
+			RuleSet ruleSet = algorithm(fileTransactions.getTransactionSet(), minSupportLevel, minConfidenceLevel);
+			resultString += ruleSet.toString();
 		} else {
-			for(String error: result.getErrorLog()) {
-				results += error + "\n";
-			}
+			resultString += fileTransactions.printErrorLog();
 		}
-		return results;
+		return resultString;
 	}
 	
-	private static Result algorithm(String filePath, double minSupportLevel, double minConfidenceLevel) {
+	private static RuleSet algorithm(TransactionSet transactionsFromFile, double minSupportLevel, double minConfidenceLevel) {
 		/* Frequent item sets generation */
 		TransactionSet transactionResults = new TransactionSet(minSupportLevel, minConfidenceLevel);
 		
-		// read in transaction from file
-		Result result = readFromFile(filePath, minSupportLevel, minConfidenceLevel);
-				
-		if(result.getErrorLog() == null) {
-			TransactionSet transactionsFromFile = result.getTransactionSet();
+		// create and filter out single items not meeting minSupportLevel
+		TransactionSet candidateSets = generateSingleItemCandidateSets(transactionsFromFile);		
+		TransactionSet filteredSets = filterItems(candidateSets, transactionsFromFile);
 		
-			// create and filter out single items not meeting minSupportLevel
-			TransactionSet candidateSets = generateSingleItemCandidateSets(transactionsFromFile, minSupportLevel);
+		// create and filter two-item sets
+		candidateSets = generateTwoItemSets(filteredSets);
+		filteredSets = removeImpossibleCandidates(candidateSets, filteredSets, 1);
+		filteredSets = filterItems(candidateSets, transactionsFromFile);
+		transactionResults.addAll(filteredSets);
 			
-			TransactionSet filteredSets = filterItems(candidateSets, transactionsFromFile);
-			transactionResults.addAll(filteredSets);
-					
-			// create and filter two-item sets
-			candidateSets = generateTwoItemSets(filteredSets, minSupportLevel);
-			filteredSets = filterItems(candidateSets, transactionsFromFile);
-			transactionResults.addAll(filteredSets);
-			
-			TransactionSet previousSets = filteredSets;
-			
-			int count = 3;
-			while(filteredSets.getSize() > 1) {		// continue cycle until there are 0-1 elements
-				previousSets = filteredSets;
+		int count = 3;
+		TransactionSet previousSets = null;
 		
-				candidateSets = generateCandidates(filteredSets, minSupportLevel, count);
-				filteredSets = removeImpossibleCandidates(candidateSets, previousSets, minSupportLevel, count - 1);
-				filteredSets = filterItems(filteredSets, transactionsFromFile);
-				
-				transactionResults.addAll(filteredSets);
-				++count;
-			}
+		while(filteredSets.getSize() > 1) {		// continue cycle until there are 0-1 elements
+			previousSets = filteredSets;
+			candidateSets = generateCandidates(filteredSets, count);
+			filteredSets = removeImpossibleCandidates(candidateSets, previousSets, count - 1);
+			filteredSets = filterItems(filteredSets, transactionsFromFile);
 			
-			if(filteredSets.getSize() < 1) {
-				filteredSets = previousSets;
-				System.out.println(filteredSets);
-			}
-
-			/* Association rule sets */
-			RuleSet ruleSets = new RuleSet(minConfidenceLevel);
-			ruleSets = generateAllPossibleAssociations(filteredSets);
-			ruleSets = filterByConfidence(ruleSets, transactionResults, minConfidenceLevel, transactionsFromFile.getSize());
-
-			result.setRuleSet(ruleSets);
+			transactionResults.addAll(filteredSets);
+			++count;
 		}
-		return result;
+		
+		/* Association rule sets */
+		RuleSet ruleSets = new RuleSet(minConfidenceLevel);
+		ruleSets = generateAllPossibleRules(transactionResults);
+		ruleSets = filterByConfidence(ruleSets, transactionsFromFile, minConfidenceLevel, transactionsFromFile.getSize());
+		return ruleSets;
 	}
 
-	private static Result readFromFile(String filepath, double minSupportLevel, double minConfidenceLevel) {
-		Result result = new Result();
-		ArrayList<String> errorLog = new ArrayList<String>();
-		
-		TransactionSet transactionsFromFile = new TransactionSet(minSupportLevel, minConfidenceLevel);
-		BufferedReader in;
-		
-		try {
-			int line = 1;
-			in = new BufferedReader(new FileReader(filepath));
-			String currentLine = in.readLine();
-			
-			// skips through blank lines that may be beginning of file
-			while(currentLine != null && currentLine.equals("")) {
-				currentLine = in.readLine();
-				++line;
-			}
-			
-			if(currentLine == null) {
-				errorLog.add("ERROR: The transaction file is completely empty.");
-			} else {
-				if(!currentLine.equals("PaulMart")) {		// check for vendor
-					errorLog.add("Line " + line + ": The transaction set does not contain the correct vendor information.");
-				}
-				
-				currentLine = in.readLine();
-				++line;
-				
-				// skips through blank lines to dates
-				while(currentLine != null && currentLine.equals("")) {
-					currentLine = in.readLine();
-					++line;
-				}
-				
-				String startDate = "00-00-00";
-				String defaultTime = "12:00:00";
-
-				if(isValidDate(currentLine)) {
-					startDate = currentLine;
-				} else {
-					errorLog.add("Line " + line + ": The transacion set does not contain a valid starting date (YYYY-MM-DD).");	
-				}
-				
-				++line;
-				currentLine = in.readLine();
-				// skips through blank lines to end date
-				while(currentLine != null && currentLine.equals("")) {
-					currentLine = in.readLine();
-					++line;
-				}
-				
-				if(!isValidDate(currentLine)) {
-					errorLog.add("Line " + line + ": The transacion set does not contain a valid ending date (YYYY-MM-DD).");
-				}
-				
-				++line;
-				currentLine = in.readLine();
-				
-				// skips through blank lines to get transactions
-				while(currentLine != null && currentLine.equals("")) {
-					currentLine = in.readLine();
-					++line;
-				}
-			
-				while(currentLine != null) {
-					if(currentLine.equals("")) {
-						currentLine = in.readLine();
-						++line;
-					} else {
-						String date = startDate;
-						String time = defaultTime;
-						String modifiedLine = currentLine.toLowerCase().replaceAll(" ", "");	// remove spaces
-						
-						if(!modifiedLine.startsWith("{")) {
-							errorLog.add("Line " + line + ": Transaction line does not start with '{'.");
-						} else {
-							modifiedLine = modifiedLine.substring(1, modifiedLine.length());
-							if(!modifiedLine.endsWith("}")) {
-								String possibleDateTime = modifiedLine.replaceAll(".*}(\\d)", "$1");
-	
-								if(possibleDateTime.length() > 9 && isValidDate(possibleDateTime.substring(0,10))) {
-									date = possibleDateTime.substring(0,9);
-									
-									if(possibleDateTime.length() > 8 && isValidTime(possibleDateTime.substring(10))) {
-										time = possibleDateTime.substring(10);
-										modifiedLine = modifiedLine.substring(0, modifiedLine.length() - 20);
-									}
-								} else {
-									errorLog.add("Line " + line + ": Transaction line does not start with '}'.");
-								}
-							} else {
-								modifiedLine = modifiedLine.substring(0, modifiedLine.length() - 1);
-							}
-							
-							String[] itemsFromString = modifiedLine.split(",");
-							ArrayList<String> itemsInTransaction = new ArrayList<String>();
-
-							int i = 0;
-							while(i < itemsFromString.length) {
-								if(itemsFromString[i].equals("")) {
-									errorLog.add("Line " + line + ": There are two consecutive commas in the transaction file.");
-								} else if(itemsInTransaction.size() > 1000) {
-									errorLog.add("Line " + line + ": The transaction contains over 1000 items. (item: " + itemsFromString[i] + ")");
-								} else if(!itemsInTransaction.contains(itemsFromString[i])) {
-									itemsInTransaction.add(itemsFromString[i]);
-								}
-								++i;
-							}
-							Transaction currTransaction = new Transaction(itemsInTransaction, time, date);
-							transactionsFromFile.add(currTransaction);
-						}
-						++line;
-						currentLine = in.readLine();
-					}
-				}
-				in.close();
-				result.setTransactionSet(transactionsFromFile);
-			}
-		} catch (FileNotFoundException e) {
-			errorLog.add("ERROR: The file (" + filepath + ") does not exist.");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		if(errorLog.size() > 0) {
-			result.setErrorLog(errorLog);
-		}
-		return result;
-	}
-
-	private static TransactionSet generateSingleItemCandidateSets(TransactionSet transactionSet, double minSupportLevel) {
-		Transaction uniqueItems = generateUniqueItems(transactionSet, minSupportLevel);
+	private static TransactionSet generateSingleItemCandidateSets(TransactionSet transactionSet) {
+		Transaction uniqueItems = generateUniqueItems(transactionSet);
 
 		TransactionSet singleItemCandidateSets = new TransactionSet(transactionSet.getMinSupportLevel(), transactionSet.getMinConfidenceLevel());
 		for(int i = 0; i < uniqueItems.getSize(); i++) {
@@ -228,12 +86,12 @@ public class APriori {
 		return singleItemCandidateSets;
 	}
 	
-	private static Transaction generateUniqueItems(TransactionSet transactionsFromFile, double minSupportLevel) {
+	private static Transaction generateUniqueItems(TransactionSet transactions) {
 		Transaction uniqueItems = new Transaction();
 		
-		for(int i = 0; i < transactionsFromFile.getSize(); i++) {	// for each transaction in transactionSet
-			for(int j = 0; j < transactionsFromFile.getTransaction(i).getSize(); j++) { 	// for each item in transaction
-				String itemSearched = transactionsFromFile.getTransaction(i).getItem(j);
+		for(int i = 0; i < transactions.getSize(); i++) {	// for each transaction in transactionSet
+			for(int j = 0; j < transactions.getTransaction(i).getSize(); j++) { 	// for each item in transaction
+				String itemSearched = transactions.getTransaction(i).getItem(j);
 				if(!uniqueItems.contains(itemSearched)) {
 					uniqueItems.add(itemSearched);
 				}
@@ -243,7 +101,7 @@ public class APriori {
 		return uniqueItems;
 	}
 	
-	private static TransactionSet generateTwoItemSets(TransactionSet filteredSingleItemSets, double minSupportLevel) {
+	private static TransactionSet generateTwoItemSets(TransactionSet filteredSingleItemSets) {
 		TransactionSet twoItemSets = new TransactionSet(filteredSingleItemSets.getMinSupportLevel(), filteredSingleItemSets.getMinConfidenceLevel());
 		for(int i = 0; i < filteredSingleItemSets.getSize(); i++) {
 			for(int j = i + 1; j < filteredSingleItemSets.getSize(); j++) {
@@ -256,11 +114,11 @@ public class APriori {
 		return twoItemSets;
 	}
 	
-	private static TransactionSet generateCandidates(TransactionSet multipleItemSets, double minSupportLevel, int itemsToAdd) {
-		Transaction uniqueItems = generateUniqueItems(multipleItemSets, minSupportLevel);
-		
+	private static TransactionSet generateCandidates(TransactionSet multipleItemSets, int itemsToAdd) {
+		Transaction uniqueItems = generateUniqueItems(multipleItemSets);
 		TransactionSet candidatesWithDuplicates = generateCandidatesRecursive(new Transaction(), uniqueItems, multipleItemSets.getMinSupportLevel(), multipleItemSets.getMinConfidenceLevel(), itemsToAdd); // wrapper method
-		TransactionSet candidates = new TransactionSet(minSupportLevel, multipleItemSets.getMinConfidenceLevel());
+		TransactionSet candidates = new TransactionSet(multipleItemSets.getMinSupportLevel(), multipleItemSets.getMinConfidenceLevel());
+
 		for(int i = 0; i < candidatesWithDuplicates.getSize(); i++) {
 			Transaction transaction = candidatesWithDuplicates.getTransaction(i);
 			
@@ -308,10 +166,13 @@ public class APriori {
 		return filteredItems;
 	}
 
-	private static TransactionSet removeImpossibleCandidates(TransactionSet multipleItemSets, TransactionSet previousItemSets, double minSupportLevel, int count) {
-		TransactionSet filteredItems = new TransactionSet(minSupportLevel, multipleItemSets.getMinConfidenceLevel());
+	private static TransactionSet removeImpossibleCandidates(TransactionSet multipleItemSets, TransactionSet previousItemSets, int count) {
+		TransactionSet filteredItems = new TransactionSet(multipleItemSets.getMinSupportLevel(), multipleItemSets.getMinConfidenceLevel());
 		for(int i = 0; i < multipleItemSets.getSize(); i++) {
-			TransactionSet requiredItems = generateCandidates(multipleItemSets, minSupportLevel, count);
+			TransactionSet singleSet = new TransactionSet(multipleItemSets.getMinSupportLevel(), multipleItemSets.getMinConfidenceLevel());
+			singleSet.add(multipleItemSets.getTransaction(i));
+			TransactionSet requiredItems = generateCandidates(singleSet, count);
+			
 			boolean missedMatch = false;
 			for(int j = 0; j < requiredItems.getSize(); j++) {
 				if(!previousItemSets.containsSingle(requiredItems.getTransaction(j))) {
@@ -335,25 +196,15 @@ public class APriori {
 		}
 	}
 
-	private static RuleSet generateAllPossibleAssociations(TransactionSet results) {
+	private static RuleSet generateAllPossibleRules(TransactionSet results) {
 		RuleSet ruleSetWithDuplicates = new RuleSet(results.getMinConfidenceLevel());
 		for(int i = 0; i < results.getSize(); i++) {
-			RuleSet rules = generatePossibleAntecedentsRecursive(results.getTransaction(i), new Rule(), results.getMinConfidenceLevel(), results.getTransaction(i).getSize() - 1); // wrapper method
-			rules = generatePossibleConsequents(rules, results.getTransaction(i));
-
-			for(int j = 0; j < rules.getSize(); j++) {
-				Transaction unusedItems = new Transaction(results.getTransaction(i));
-				for(int k = 0; k < rules.getRule(j).getAntecedentSize(); k++) {
-					unusedItems.remove(rules.getRule(j).getAntecedent().get(k));
-				}
-			}
-			
-			ruleSetWithDuplicates.getRules().addAll(rules.getRules());
+			RuleSet rules = generatePossibleRulesRecursive(results.getTransaction(i), new Rule(), results.getMinConfidenceLevel(), results.getTransaction(i).getSize() - 1); // wrapper method
+			ruleSetWithDuplicates.addAll(rules);
 		}
 		RuleSet ruleSets = new RuleSet(results.getMinConfidenceLevel());
 		for(int i = 0; i < ruleSetWithDuplicates.getSize(); i++) {
 			Rule rule = ruleSetWithDuplicates.getRule(i);
-
 			if(!ruleSets.containsRule(rule)) {
 				ruleSets.add(rule);
 			}
@@ -361,42 +212,50 @@ public class APriori {
 		return ruleSets;
 	}
 
-	private static RuleSet generatePossibleAntecedentsRecursive(Transaction transaction, Rule Rule, double minConfidenceLevel, int itemsToAdd) {
+	private static RuleSet generatePossibleRulesRecursive(Transaction transaction, Rule rule, double minConfidenceLevel, int itemsToAdd) {
 		RuleSet ruleSet = new RuleSet(minConfidenceLevel);
 		if(itemsToAdd == 1) {
 			for(int i = 0; i < transaction.getSize(); i++) {
-				Rule rule2 = new Rule(Rule);
-				rule2.addAntecedent(transaction.getItem(i));
-				ruleSet.add(rule2);
+				Rule rule2 = new Rule(rule);
+				String item = transaction.getItem(i);
+				rule2.addAntecedent(item);
+				Transaction transaction2 = new Transaction(transaction);
+				transaction2.remove(item);
+				ruleSet.addAll(generatePossibleConsequentsRecursive(transaction2, rule2, minConfidenceLevel));
 			}
 			return ruleSet;
 		} else {
-			if(Rule.getAntecedent().size() > 0) {
-				ruleSet.add(Rule);
+			if(rule.getAntecedent().size() > 0) {
+				ruleSet.add(rule);
 			}
 			for(int i = 0; i < transaction.getSize(); i++) {
-				Rule Rule2 = new Rule(Rule);
-				Rule2.addAntecedent(transaction.getItem(i));
+				Rule rule2 = new Rule(rule);
+				rule2.addAntecedent(transaction.getItem(i));
 				Transaction transaction2 = new Transaction(transaction);
 				transaction2.remove(transaction.getItem(i));
-				ruleSet.add(Rule2);
-				RuleSet preResults = generatePossibleAntecedentsRecursive(transaction2, Rule2, minConfidenceLevel, itemsToAdd - 1);
+				ruleSet.addAll(generatePossibleConsequentsRecursive(transaction2, rule2, minConfidenceLevel));
+				RuleSet preResults = generatePossibleRulesRecursive(transaction2, rule2, minConfidenceLevel, itemsToAdd - 1);
 				ruleSet.addAll(preResults);
 			}
 		}
 		return ruleSet;
 	}
 	
-	private static RuleSet generatePossibleConsequents(RuleSet rules, Transaction transaction) {
-		RuleSet ruleSet = new RuleSet(rules.getMinConfidenceLevel());
-		
-		for(int i = 0; i < rules.getSize(); i++) {
-			for(int j = 0; j < transaction.getSize(); j++) {
-				String item = transaction.getItem(j);
-				if(!rules.getRule(i).getAntecedent().contains((String) item)) {
-					rules.getRule(i).addConsequent(item);
-					ruleSet.add(rules.getRule(i));
-				}
+	private static RuleSet generatePossibleConsequentsRecursive(Transaction transaction, Rule rule, double minConfidenceLevel) {
+		RuleSet ruleSet = new RuleSet(minConfidenceLevel);
+		if(transaction.getSize() == 1) {
+			Rule rule2 = new Rule(rule);
+			rule2.addConsequent(transaction.getItem(0));
+			ruleSet.add(rule2);
+		} else {
+			for(int i = 0; i < transaction.getSize(); i++) {
+				Rule rule2 = new Rule(rule);
+				rule2.addConsequent(transaction.getItem(i));
+				Transaction transaction2 = new Transaction(transaction);
+				transaction2.remove(transaction.getItem(i));
+				ruleSet.add(rule2);
+				RuleSet preResults = generatePossibleConsequentsRecursive(transaction2, rule2, minConfidenceLevel);
+				ruleSet.addAll(preResults);
 			}
 		}
 		return ruleSet;
@@ -406,47 +265,26 @@ public class APriori {
 		RuleSet finalRules = new RuleSet(possibleRuleSets.getMinConfidenceLevel());
 
 		for(int i = 0; i < possibleRuleSets.getSize(); i++) {
+			Rule testRule = possibleRuleSets.getRule(i);
 			double supportCountX = 0;
 			double supportCountXUY = 0;
 			for(int j = 0; j < transactionSet.getSize(); j++) {
 				Transaction transaction = transactionSet.getTransaction(j);
-				if(transaction.getItems().equals(possibleRuleSets.getRule(i).getAntecedent())) {
-					supportCountX = transaction.getSupportLevel();
-				}
-				if(transaction.getItems().containsAll(possibleRuleSets.getRule(i).getAntecedent()) &&
-					transaction.getItems().containsAll(possibleRuleSets.getRule(i).getConsequent())) {
-					supportCountXUY = transaction.getSupportLevel();
+				if(transaction.getItems().containsAll(testRule.getAntecedent())) {
+					supportCountX += 1;
+					
+					if(transaction.getItems().containsAll(testRule.getConsequent())) {
+						supportCountXUY += 1;
+					}
 				}
 			}
 			double confidenceLevel = supportCountXUY / supportCountX;
+			possibleRuleSets.getRule(i).setConfidenceLevel(confidenceLevel);
+
 			if(confidenceLevel >= minConfidenceLevel) {
-				possibleRuleSets.getRule(i).setConfidenceLevel(confidenceLevel);
 				finalRules.add(possibleRuleSets.getRule(i));
 			}
 		}
 		return finalRules;
 	}
-
-	
-	public static boolean isValidDate(String date) {
-		try {
-			DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-			df.setLenient(false);
-			df.parse(date);
-			return true;
-		} catch (ParseException e) {
-			return false;
-		}
-	}
-	
-	public static boolean isValidTime(String time) {
-		try {
-			DateFormat df = new SimpleDateFormat("HH:mm:ss");
-			df.setLenient(false);
-			df.parse(time);
-			return true;
-		} catch (ParseException e) {
-			return false;
-		}
-	}		
 }

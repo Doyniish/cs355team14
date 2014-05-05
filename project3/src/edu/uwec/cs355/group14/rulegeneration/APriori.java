@@ -9,6 +9,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import edu.uwec.cs355.group14.common.Timer;
+
 public class APriori implements Serializable {
 	private static final long serialVersionUID = 1L;
 	static ArrayList<String> generatedLines;

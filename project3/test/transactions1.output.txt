@@ -1,2 +1,0 @@
-If beer Then cheese (1.0)
-If cheese Then beer (0.6667)
