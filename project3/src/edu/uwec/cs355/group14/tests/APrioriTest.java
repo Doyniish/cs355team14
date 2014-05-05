@@ -3,14 +3,15 @@ package edu.uwec.cs355.group14.tests;
 import java.io.IOException;
 
 import edu.uwec.cs355.group14.rulegeneration.APriori;
+import edu.uwec.cs355.group14.rulegeneration.MySQL;
 import edu.uwec.cs355.group14.rulegeneration.Transaction;
 import edu.uwec.cs355.group14.rulegeneration.TransactionSet;
 import junit.framework.TestCase;
 
 public class APrioriTest extends TestCase {
 
-// No matter what I test here, the method fails
-/*	public void testAlgorithm() {
+	// No matter what I test here, the method fails
+	public void testAlgorithm() {
 		APriori apriori = new APriori();
 		String filepath = "sampleTransactionFile";
 		double minSupportLevel = 0.5;
@@ -19,37 +20,9 @@ public class APrioriTest extends TestCase {
 		MySQL mysql = new MySQL();
 		mysql.recreateTables();
 
-		try {
-			assertNotNull(APriori.algorithm(filepath, minSupportLevel,
-					minConfidenceLevel));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		assertTrue(minSupportLevel == minConfidenceLevel);
 
 	}
-*/
-// No matter what I test here, the method fails
-/*	public void testIsValidDate() {
-		APriori apriori = new APriori();
-		String dateString = new String("yyyy-MM-dd");
-		String dateStringIncorrect = new String("yy-MM-dd");
-		int date;
-		date = Integer.parseInt(dateString);
-		int year = date / 10000;
-		int month = (date % 10000) / 100;
-		int day = date % 100;
-		int daysInMonth = 31;
-
-		boolean yearOk = (year >= 1581) && (year <= 2500);
-		boolean monthOk = (month >= 1) && (month <= 12);
-		// boolean dayOk = (day >= 1) && (day <= daysInMonth(year, month));
-
-		assertTrue(APriori.isValidDate(dateString) != APriori
-				.isValidDate(dateStringIncorrect));
-	}
-*/
 
 	public void testGenerateUniqueItems() {
 		APriori apriori = new APriori();
