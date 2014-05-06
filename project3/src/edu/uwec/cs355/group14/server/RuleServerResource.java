@@ -27,9 +27,9 @@ public class RuleServerResource extends ServerResource implements RuleResource {
 
 	public void store(Result result) {
 		RuleServerResource.minSupportLevel = result.getTransactionSet().getMinSupportLevel();
-		RuleServerResource.minConfidenceLevel = result.getTransactionSet().getMinSupportLevel();
+		RuleServerResource.minConfidenceLevel = result.getTransactionSet().getMinConfidenceLevel();
 		RuleServerResource.transactionSet = result.getTransactionSet();
-		RuleServerResource.ruleSet = APriori.generateRules(transactionSet, minSupportLevel, minConfidenceLevel);
+		RuleServerResource.ruleSet = APriori.generateRules(RuleServerResource.transactionSet, RuleServerResource.minSupportLevel, RuleServerResource.minConfidenceLevel);
 		MySQL mysql = new MySQL();
 		mysql.recreateTables();
 		mysql.saveData(RuleServerResource.transactionSet, RuleServerResource.ruleSet);

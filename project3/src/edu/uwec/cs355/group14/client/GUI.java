@@ -104,12 +104,13 @@ public class GUI extends JFrame {
 						proxy.store(fileTransactions);
 						RuleSet ruleSet = proxy.retrieve();
 						resultString += ruleSet.toString();
+						savedfiletxt.setText(saveToFile(filepath, resultString));
+
 					} else {
 						resultString += fileTransactions.printErrorLog();
 					}
 	
 					display.setText(resultString);
-					savedfiletxt.setText(saveToFile(filepath, resultString));
 				}
 			}
 		});
