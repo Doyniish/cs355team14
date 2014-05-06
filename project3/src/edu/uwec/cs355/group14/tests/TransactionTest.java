@@ -1,6 +1,8 @@
 package edu.uwec.cs355.group14.tests;
 
-import edu.uwec.cs355.group14.rulegeneration.Transaction;
+import java.util.ArrayList;
+
+import edu.uwec.cs355.group14.common.Transaction;
 import junit.framework.TestCase;
 
 public class TransactionTest extends TestCase {
@@ -95,16 +97,24 @@ public class TransactionTest extends TestCase {
 	}
 
 	public void testGetItems() {
-
-		Transaction itemsToGet = new Transaction("{Apples, Beer}");
-		Transaction itemsRecieved = new Transaction("{Diapers}");
+		ArrayList<String> itemsA = new ArrayList<String>();
+		itemsA.add("Apples");
+		itemsA.add("Beer");
+		Transaction itemsToGet = new Transaction(itemsA, "", "");
+		ArrayList<String> itemsB = new ArrayList<String>();
+		itemsB.add("Diapers");
+		Transaction itemsRecieved = new Transaction(itemsB, "", "");
 
 		assertTrue(itemsToGet.getItems() != itemsRecieved.getItems());
 
 	}
 
 	public void testGetSize() {
-		Transaction items = new Transaction("{Apples, Beer, Diapers}");
+		ArrayList<String> item = new ArrayList<String>();
+		item.add("Apples");
+		item.add("Beer");
+		item.add("Diapers");
+		Transaction items = new Transaction(item, "", "");
 		items.getSize();
 
 		assertNotNull(items.getSize());
@@ -119,21 +129,27 @@ public class TransactionTest extends TestCase {
 	}
 
 	public void testContainsTransaction() {
-		Transaction transaction1 = new Transaction("{Apples, Beer, Diapers}");
-		Transaction transaction2 = new Transaction("{Apples, Beer, Diapers}");
+		ArrayList<String> items = new ArrayList<String>();
+		items.add("Apples");
+		items.add("Beer");
+		items.add("Diapers");
+		Transaction transaction1 = new Transaction(items, "", "");
+		Transaction transaction2 = new Transaction(items, "", "");
 
 		assertTrue(transaction1.contains("{Apples, Beer, Diapers}") == transaction2
 				.contains("{Apples, Beer, Diapers}"));
 	}
 
 	public void testToString() {
-		Transaction transaction = new Transaction("{Apples, Beer, Diapers}");
+		ArrayList<String> items = new ArrayList<String>();
+		items.add("Apples");
+		items.add("Beer");
+		items.add("Diapers");
+		Transaction transaction = new Transaction(items, "", "");
 		String toString = new String();
 		transaction.toString();
 		toString.toString();
-
+		
 		assertFalse(transaction.toString() == toString.toString());
-
 	}
-
 }

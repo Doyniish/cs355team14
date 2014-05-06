@@ -1,11 +1,12 @@
 package edu.uwec.cs355.group14.tests;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
-import edu.uwec.cs355.group14.rulegeneration.APriori;
-import edu.uwec.cs355.group14.rulegeneration.MySQL;
-import edu.uwec.cs355.group14.rulegeneration.Transaction;
-import edu.uwec.cs355.group14.rulegeneration.TransactionSet;
+import edu.uwec.cs355.group14.server.APriori;
+import edu.uwec.cs355.group14.server.MySQL;
+import edu.uwec.cs355.group14.common.Transaction;
+import edu.uwec.cs355.group14.common.TransactionSet;
 import junit.framework.TestCase;
 
 public class APrioriTest extends TestCase {
@@ -25,11 +26,26 @@ public class APrioriTest extends TestCase {
 	}
 
 	public void testGenerateUniqueItems() {
-		APriori apriori = new APriori();
-		double minSupportLevel = 0.25;
-		Transaction uniqueItems = new Transaction(minSupportLevel);
-
-		assertNotNull(uniqueItems.contains(apriori));
+		TransactionSet transactionSet = new TransactionSet(0, 0);
+		
+		ArrayList<String> itemsA = new ArrayList<String>();
+		itemsA.add("A");
+		Transaction transA = new Transaction(itemsA, "", "");
+		transactionSet.add(transA);
+		
+		ArrayList<String> itemsB = new ArrayList<String>();
+		itemsB.add("B");
+		Transaction transB = new Transaction(itemsB, "", "");
+		transactionSet.add(transB);
+		
+		ArrayList<String> itemsAB = new ArrayList<String>();
+		itemsAB.add("A");
+		itemsAB.add("B");
+		Transaction transAB = new Transaction(itemsAB, "", "");
+		
+		Transaction uniqueItems = APriori.generateUniqueItems(transactionSet);
+	
+		assertNotNull(uniqueItems.containsAll(transAB));
 	}
 
 	public void testGenerateSingleItemCandidateSets() {
@@ -37,8 +53,8 @@ public class APrioriTest extends TestCase {
 		double minConfidenceLevel = 0.25;
 		TransactionSet transactionSet = new TransactionSet(minSupportLevel,
 				minConfidenceLevel);
-		Transaction singleItem = new Transaction(minSupportLevel);
-		Transaction doubleItem = new Transaction(minConfidenceLevel);
+		Transaction singleItem = new Transaction();
+		Transaction doubleItem = new Transaction();
 
 		assertTrue(singleItem != doubleItem);
 

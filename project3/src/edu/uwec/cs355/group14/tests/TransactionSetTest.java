@@ -1,14 +1,20 @@
 package edu.uwec.cs355.group14.tests;
 
-import edu.uwec.cs355.group14.rulegeneration.Transaction;
-import edu.uwec.cs355.group14.rulegeneration.TransactionSet;
+import java.util.ArrayList;
+
+import edu.uwec.cs355.group14.common.Transaction;
+import edu.uwec.cs355.group14.common.TransactionSet;
 import junit.framework.TestCase;
 
 public class TransactionSetTest extends TestCase {
 
 	public void testContainsSingle() {
-		Transaction transactionSingle = new Transaction("{Apples}");
-		Transaction transactionFull = new Transaction("{Apples, Beer, Diapers");
+		ArrayList<String> items = new ArrayList<String>();
+		items.add("Apples");
+		Transaction transactionSingle = new Transaction(items, "", "");
+		items.add("Beer");
+		items.add("Diapers");
+		Transaction transactionFull = new Transaction(items, "", "");
 		double minSupportLevel = 1;
 		double minConfidenceLevel = 1;
 		TransactionSet transactionSet = new TransactionSet(minSupportLevel,
@@ -18,11 +24,14 @@ public class TransactionSetTest extends TestCase {
 	}
 
 	public void testToString() {
-		Transaction transaction = new Transaction("{Apples, Beer, Diapers}");
+		ArrayList<String> items = new ArrayList<String>();
+		items.add("Apples");
+		items.add("Beer");
+		items.add("Diapers");
+		Transaction transaction = new Transaction(items, "", "");
 		double minSupportLevel = 1;
 		double minConfidenceLevel = 1;
-		TransactionSet transactionSet = new TransactionSet(minSupportLevel,
-				minConfidenceLevel);
+		TransactionSet transactionSet = new TransactionSet(minSupportLevel, minConfidenceLevel);
 		String toString = new String();
 		transaction.toString();
 		toString.toString();
@@ -31,8 +40,16 @@ public class TransactionSetTest extends TestCase {
 	}
 
 	public void testGetTransactionSet() {
-		Transaction transaction1 = new Transaction("{Apples, Beer, Diapers}");
-		Transaction transaction2 = new Transaction("{Beer, Diapers, Apples}");
+		ArrayList<String> items = new ArrayList<String>();
+		items.add("Apples");
+		items.add("Beer");
+		items.add("Diapers");
+		Transaction transaction1 = new Transaction(items, "", "");
+		ArrayList<String> items2 = new ArrayList<String>();
+		items.add("Beer");
+		items.add("Diapers");
+		items.add("Apples");
+		Transaction transaction2 = new Transaction(items2, "", "");
 		double minSupportLevel = 1;
 		double minConfidenceLevel = 1;
 		double wrongSupportLevel = 0;

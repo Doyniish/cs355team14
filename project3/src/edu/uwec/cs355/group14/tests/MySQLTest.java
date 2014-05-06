@@ -1,13 +1,14 @@
 package edu.uwec.cs355.group14.tests;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import edu.uwec.cs355.group14.rulegeneration.AssociationRuleSet;
-import edu.uwec.cs355.group14.rulegeneration.MySQL;
-import edu.uwec.cs355.group14.rulegeneration.Transaction;
-import edu.uwec.cs355.group14.rulegeneration.TransactionSet;
+import edu.uwec.cs355.group14.common.RuleSet;
+import edu.uwec.cs355.group14.server.MySQL;
+import edu.uwec.cs355.group14.common.Transaction;
+import edu.uwec.cs355.group14.common.TransactionSet;
 import junit.framework.TestCase;
 
 public class MySQLTest extends TestCase {
@@ -30,11 +31,15 @@ public class MySQLTest extends TestCase {
 	}
 
 	public void testSaveTransactions() {
-		Transaction transaction = new Transaction("{Apples, Beer, Diapers}");
+		ArrayList<String> items = new ArrayList<String>();
+		items.add("Apples");
+		items.add("Beer");
+		items.add("Diapers");
+		Transaction transaction = new Transaction(items, "", "");
 		double minSupportLevel = 0.5;
 		double minConfidenceLevel = 0.5;
-		TransactionSet transactionSet = new TransactionSet(transaction,
-				minSupportLevel, minConfidenceLevel);
+		TransactionSet transactionSet = new TransactionSet(minSupportLevel, minConfidenceLevel);
+		transactionSet.add(transaction);
 		SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 		Calendar calendar = new GregorianCalendar();
 		String datetime = sdf.format(calendar.getTime());
@@ -53,7 +58,7 @@ public class MySQLTest extends TestCase {
 	}
 
 	public void testSaveRules() {
-		AssociationRuleSet associationRuleSet = new AssociationRuleSet();
+		RuleSet associationRuleSet = new RuleSet(0.0);
 		int ts_id = -1;
 		int rs_id = -1;
 		String sql = new String(

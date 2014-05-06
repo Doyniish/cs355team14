@@ -65,7 +65,7 @@ public class APriori {
 		return singleItemCandidateSets;
 	}
 	
-	private static Transaction generateUniqueItems(TransactionSet transactions) {
+	 public static Transaction generateUniqueItems(TransactionSet transactions) {
 		Transaction uniqueItems = new Transaction();
 		
 		for(int i = 0; i < transactions.getSize(); i++) {	// for each transaction in transactionSet
