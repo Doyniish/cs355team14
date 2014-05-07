@@ -121,7 +121,11 @@ public class Result implements Serializable {
 							int i = 0;
 							while(i < itemsFromString.length) {
 								if(itemsFromString[i].equals("")) {
-									errors.add("Line " + line + ": There are two consecutive commas in the transaction file.");
+									if(i == 0 && itemsFromString.length == 1) {
+										errors.add("Line " + line + ": The transaction is empty.");
+									} else {
+										errors.add("Line " + line + ": There are two consecutive commas in the transaction file.");
+									}
 								} else if(itemsInTransaction.size() > 1000) {
 									errors.add("Line " + line + ": The transaction contains over 1000 items. (item: " + itemsFromString[i] + ")");
 								} else if(itemsFromString[i].matches(".*\\W.*")) {

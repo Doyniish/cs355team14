@@ -71,7 +71,7 @@ public class GUI extends JFrame {
 	                
 				int ret = fileopen.showDialog(panel, "Open file");
 				if (ret == JFileChooser.APPROVE_OPTION) {
-					filetxt.setText(fileopen.getSelectedFile().getName());
+					filetxt.setText(fileopen.getSelectedFile().getAbsolutePath());
 				}
 			}
 		});
@@ -82,21 +82,20 @@ public class GUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				String mclString = mcltxt.getText();
 				String mslString = msltxt.getText();
-				String error = "";
-				if(!isValidNumber(mclString)) {
-					error = "Minimum support level must be a positive number between 0 and 1, inclusive.\n";
-				}
+				String resultString = "";
 				if(!isValidNumber(mslString)) {
-					error += "Minimum confidence level must be a positive number between 0 and 1, inclusive.\n";
+					resultString = "Minimum support level must be a positive number between 0 and 1, inclusive.\n";
 				}
-				if(error.equals("")) {
+				if(!isValidNumber(mclString)) {
+					resultString += "Minimum confidence level must be a positive number between 0 and 1, inclusive.\n";
+				}
+				if(resultString.equals("")) {
 					double minConfidenceLevel = Double.parseDouble(mclString);
 					double minSupportLevel = Double.parseDouble(mslString);
 					String filepath = filetxt.getText();
 					
 					Result fileTransactions = new Result(filepath, minSupportLevel, minConfidenceLevel);
 										
-					String resultString = "";
 					if(fileTransactions.getErrorLog() == null) {
 						ClientResource clientResource = new ClientResource("http://localhost:8111/");
 						RuleResource proxy = clientResource.wrap(RuleResource.class);
@@ -105,13 +104,11 @@ public class GUI extends JFrame {
 						RuleSet ruleSet = proxy.retrieve();
 						resultString += ruleSet.toString();
 						savedfiletxt.setText(saveToFile(filepath, resultString));
-
 					} else {
 						resultString += fileTransactions.printErrorLog();
 					}
-	
-					display.setText(resultString);
 				}
+				display.setText(resultString);
 			}
 		});
 		add(run);
